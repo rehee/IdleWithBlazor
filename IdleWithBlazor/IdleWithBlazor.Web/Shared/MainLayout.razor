@@ -1,0 +1,51 @@
+﻿@inherits LayoutComponentBase
+<div class="container mx-auto min-h-screen flex flex-col">
+  <div class="h-20 bg-gray-200 grid grid-cols-5 gap-5">
+
+    <div class="col-1">
+      <!-- 左边部分的内容放在这里 -->
+      头像
+    </div>
+    <!-- 右边部分，占据剩余部分的宽度 -->
+    <div class="col-span-2">
+      <!-- 右边部分的内容放在这里 -->
+      <div>line 1</div>
+      <div>line 2</div>
+      <div>line 3</div>
+    </div>
+    <div class="col-span-2">
+      <!-- 右边部分的内容放在这里 -->
+      <div>line 2 1</div>
+      <div>line 2 2</div>
+      <div>line 2 3</div>
+    </div>
+
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    @Body
+  </div>
+
+  <div class="columns-6 h-10 bg-gray-200 flex items-center justify-center">
+    <NavLink class="w-full text-center" href="" Match="NavLinkMatch.All">
+      角色
+    </NavLink>
+    <NavLink class="w-full text-center" href="/Backpack" Match="NavLinkMatch.All">
+      背包
+    </NavLink>
+
+    <NavLink class="w-full text-center" href="/Combat" Match="NavLinkMatch.All">
+      战斗
+    </NavLink>
+    <NavLink class="w-full text-center" href="/Map" Match="NavLinkMatch.All">
+      地图
+    </NavLink>
+    <NavLink class="w-full text-center" href="/Miscell" Match="NavLinkMatch.All">
+      杂项
+    </NavLink>
+    <NavLink class="w-full text-center" href="/System" Match="NavLinkMatch.All">
+      系统
+    </NavLink>
+
+  </div>
+</div>

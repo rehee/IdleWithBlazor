@@ -1,0 +1,21 @@
+﻿@page "/Login"
+<PageTitle>登录</PageTitle>
+@layout LoginLayout
+
+<div>
+  <div class="box-content w-1/4">
+    <form @onsubmit="LoginAsync">
+      <p>
+        UserName
+        <input required type="text" @bind="Dto.UserName" />
+      </p>
+      <p>
+        Password
+        <input required type="password" @bind="Dto.Password" />
+      </p>
+      <p>
+        <input type="submit" value="Login" />
+      </p>
+    </form>
+  </div>
+</div>

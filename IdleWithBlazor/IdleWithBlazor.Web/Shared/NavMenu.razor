@@ -1,0 +1,39 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="">IdleWithBlazor.Web</a>
+    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</div>
+
+<div class="">
+  <nav class="">
+    <div class="">
+      <NavLink class="" href="" Match="NavLinkMatch.All">
+        Home 11
+      </NavLink>
+    </div>
+    <div class="">
+      <NavLink class="" href="counter">
+        Counter 22
+      </NavLink>
+    </div>
+    <div class="">
+      <NavLink class="" href="fetchdata">
+        Fetch data 33
+      </NavLink>
+    </div>
+  </nav>
+</div>
+
+@code {
+  private bool collapseNavMenu = true;
+
+  private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+  private void ToggleNavMenu()
+  {
+    collapseNavMenu = !collapseNavMenu;
+  }
+}
