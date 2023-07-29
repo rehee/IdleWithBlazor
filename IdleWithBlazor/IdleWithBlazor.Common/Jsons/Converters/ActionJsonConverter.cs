@@ -20,15 +20,8 @@ namespace IdleWithBlazor.Common.Jsons.Converters
           if (type != null)
           {
             // Deserialize the JSON to the concrete type
-            try
-            {
-              return JsonSerializer.Deserialize(root, type, options) as IActor;
-            }
-            catch (Exception ex)
-            {
-              var a = 1;
-            }
-            
+            return JsonSerializer.Deserialize(root, type, options) as IActor;
+
           }
         }
 

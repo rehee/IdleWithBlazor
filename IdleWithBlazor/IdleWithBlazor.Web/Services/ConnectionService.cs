@@ -59,17 +59,8 @@ namespace IdleWithBlazor.Web.Services
         });
         hub.On<string>("RoomMessage", r =>
         {
-          try
-          {
-            var obj = JsonSerializer.Deserialize<GameRoom>(r, ConstSetting.Options);
-            room.SetValue(obj);
-          }
-          catch(Exception ex) 
-          {
-            var a = 1;
-          }
-          
-          
+          var obj = JsonSerializer.Deserialize<GameRoom>(r, ConstSetting.Options);
+          room.SetValue(obj);
         });
         await hub.StartAsync();
         return true;
