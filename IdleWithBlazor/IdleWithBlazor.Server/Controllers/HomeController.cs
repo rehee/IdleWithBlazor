@@ -18,9 +18,6 @@ namespace IdleWithBlazor.Server.Controllers
 
     public IActionResult Index()
     {
-      var json = JsonSerializer.Serialize(GameService.Room);
-      var obj = JsonSerializer.Deserialize<GameRoom>(json);
-      var hp = obj.Map.Monsters.FirstOrDefault()?.CurrentMp;
       return Ok(GameService.Room);
     }
 
