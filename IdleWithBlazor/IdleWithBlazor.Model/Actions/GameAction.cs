@@ -1,19 +1,11 @@
-﻿using IdleWithBlazor.Model.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Model.Actors;
 
 namespace IdleWithBlazor.Model.Actions
 {
-  public class GameAction : IGameAction
+  public class GameAction : Actor, IGameAction
   {
-    protected virtual IActor Actor { get; set; }
-    public virtual void SetActor(IActor actor)
-    {
-      Actor = actor;
-      
-    }
+    public override Type TypeDiscriminator => throw new NotImplementedException();
+
   }
 }

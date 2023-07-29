@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
 
 namespace IdleWithBlazor.Model.Actors
 {
   public class GameMap : Actor
   {
-
-    public override IEnumerable<IActor> Actors
+    public override Type TypeDiscriminator => typeof(GameMap);
+    public override IEnumerable<IActor> Children
     {
       get
       {
@@ -18,15 +14,11 @@ namespace IdleWithBlazor.Model.Actors
 
         return players.Concat(mobs);
       }
-      set => base.Actors = value;
-    }
-    public override async Task OnTick()
-    {
-      await base.OnTick();
-
+      set => base.Children = value;
     }
     public List<Player> Players { get; set; }
     public List<Monster> Monsters { get; set; }
+
 
   }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,16 @@ namespace IdleWithBlazor.Model.Actors
 {
   public abstract class Actor : IActor
   {
+    public abstract Type TypeDiscriminator { get; }
     public int TickCount { get; set; }
     public Guid Id { get; set; }
-    public virtual IEnumerable<IActor> Actors { get; set; }
+    public virtual IEnumerable<IActor> Children { get; set; }
+    public IActor? Parent { get; protected set; }
+    public virtual void SetParent(IActor? actor)
+    {
+      Parent = actor;
+    }
+
     protected bool IsDisposed { get; set; }
     public virtual void Dispose()
     {
@@ -38,14 +46,15 @@ namespace IdleWithBlazor.Model.Actors
       return Task.CompletedTask;
     }
 
-    public virtual Task OnTick()
+    public virtual async Task<bool> OnTick()
     {
       TickCount++;
-      if (Actors?.Any() == true)
+      if (Children?.Any() == true)
       {
-        Task.WaitAll(Actors.Select(b => b.OnTick()).ToArray());
+        var results = await Task.WhenAll(Children.Select(b => b.OnTick()).ToArray());
+        return results?.All(b => b == true) ?? false;
       }
-      return Task.CompletedTask;
+      return true;
     }
   }
 }

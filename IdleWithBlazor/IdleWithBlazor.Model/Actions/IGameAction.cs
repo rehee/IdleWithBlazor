@@ -1,14 +1,9 @@
-﻿using IdleWithBlazor.Model.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
 
 namespace IdleWithBlazor.Model.Actions
 {
-  public interface IGameAction
+  public interface IGameAction : IActor
   {
-    void SetActor(IActor actor);
+    
   }
 }

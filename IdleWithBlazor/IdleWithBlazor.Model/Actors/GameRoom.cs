@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
 
 namespace IdleWithBlazor.Model.Actors
 {
   public class GameRoom : Actor
   {
-    public override IEnumerable<IActor> Actors
+    public override Type TypeDiscriminator => typeof(GameRoom);
+    public override IEnumerable<IActor> Children
     {
       get
       {
         return Map != null ? new IActor[] { Map } : Enumerable.Empty<IActor>();
       }
-      set => base.Actors = value;
+      set => base.Children = value;
     }
     public GameMap Map { get; set; }
   }

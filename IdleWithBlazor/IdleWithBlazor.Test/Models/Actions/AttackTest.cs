@@ -1,11 +1,6 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Test.Models.Actions
 {
@@ -24,7 +19,7 @@ namespace IdleWithBlazor.Test.Models.Actions
       var player = new Player();
       var mob = new Monster();
       player.SetTarget(mob);
-      attack.SetActor(player);
+      attack.SetParent(player);
       var result = attack.OnTick();
       Assert.IsTrue(result);
       for (var i = 0; i < tick; i++)

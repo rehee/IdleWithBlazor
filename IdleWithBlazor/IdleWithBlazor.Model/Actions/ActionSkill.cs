@@ -1,10 +1,5 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Model.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Actions
 {
@@ -17,7 +12,7 @@ namespace IdleWithBlazor.Model.Actions
 
     public (bool isType, T value) ActorType<T>() where T : Sprite
     {
-      if (Actor is T p)
+      if (Parent is T p)
       {
         return (true, p);
       }
