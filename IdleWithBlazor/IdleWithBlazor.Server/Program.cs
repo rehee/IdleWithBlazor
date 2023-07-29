@@ -1,3 +1,4 @@
+using IdleWithBlazor.Common.Jsons.Converters;
 using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Server.Hubs;
@@ -34,7 +35,10 @@ builder.Services.AddSingleton<IGameService, GameService>();
 
 builder.Services.AddHostedService<GameTask>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(o =>
+{
+  o.JsonSerializerOptions.Converters.Add(new BigIntegerJsonConverter());
+});
 builder.Services.AddResponseCompression(opts =>
 {
   opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
