@@ -11,18 +11,24 @@ namespace IdleWithBlazor.Common.Helpers
   public static class JsonSerializerOptionsHelper
   {
     private static JsonSerializerOptions _options;
-
-    public static JsonSerializerOptions Default()
+    public static object lockObj { get; set; } = new object();
+    public static JsonSerializerOptions Default
     {
-      if (_options != null)
+      get
       {
+        if (_options != null)
+        {
+          return _options;
+        }
+
+        var options = new JsonSerializerOptions();
+        options.SetDefaultOption();
+        _options = options;
         return _options;
+
       }
-      var options = new JsonSerializerOptions();
-      options.SetDefaultOption();
-      _options = options;
-      return _options;
     }
+
 
     public static void SetDefaultOption(this JsonSerializerOptions option)
     {

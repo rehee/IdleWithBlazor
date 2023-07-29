@@ -46,7 +46,10 @@ builder.Services.AddResponseCompression(opts =>
     new[] { "application/octet-stream" }
     );
 });
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddJsonProtocol(o =>
+{
+  o.PayloadSerializerOptions.SetDefaultOption();
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,6 +9,7 @@ namespace IdleWithBlazor.Model.Actions
 {
   public class Attack : ActionSkill
   {
+    public override Type TypeDiscriminator => typeof(Attack);
     public override Decimal CoolDown { get; set; }
     public override Decimal AttackSpeed { get; set; }
 
@@ -19,9 +20,9 @@ namespace IdleWithBlazor.Model.Actions
       SetCooldownTick();
     }
 
-    public override bool OnTick()
+    public override async Task<bool> OnTick()
     {
-      var isOntick = base.OnTick();
+      var isOntick = await base.OnTick();
       if (!isOntick)
       {
         return false;
@@ -34,7 +35,10 @@ namespace IdleWithBlazor.Model.Actions
       var target = actor.value.Target;
       if (target is Sprite sprite)
       {
-        sprite.CurrentMp = sprite.CurrentMp - 1;
+        lock (sprite)
+        {
+          sprite.CurrentHp = sprite.CurrentHp - 1;
+        }
         return true;
       }
 

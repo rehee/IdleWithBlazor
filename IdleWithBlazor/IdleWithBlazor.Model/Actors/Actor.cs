@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Actors
@@ -10,9 +11,10 @@ namespace IdleWithBlazor.Model.Actors
   public abstract class Actor : IActor
   {
     public abstract Type TypeDiscriminator { get; }
-    public int TickCount { get; set; }
     public Guid Id { get; set; }
+
     public virtual IEnumerable<IActor> Children { get; set; }
+    [JsonIgnore]
     public IActor? Parent { get; protected set; }
     public virtual void SetParent(IActor? actor)
     {
@@ -29,16 +31,16 @@ namespace IdleWithBlazor.Model.Actors
       IsDisposed = true;
       GC.SuppressFinalize(this);
     }
-    public virtual async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-      await Task.CompletedTask;
+
       if (IsDisposed)
       {
-        return;
+        return ValueTask.CompletedTask; ;
       }
       IsDisposed = true;
       GC.SuppressFinalize(this);
-
+      return ValueTask.CompletedTask;
     }
 
     public virtual Task OnInitialization()
@@ -48,7 +50,6 @@ namespace IdleWithBlazor.Model.Actors
 
     public virtual async Task<bool> OnTick()
     {
-      TickCount++;
       if (Children?.Any() == true)
       {
         var results = await Task.WhenAll(Children.Select(b => b.OnTick()).ToArray());

@@ -50,9 +50,10 @@ namespace IdleWithBlazor.Test.Actors
 
     }
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-      await Task.CompletedTask;
+      Dispose();
+      return ValueTask.CompletedTask;
     }
 
     public async Task OnInitialization()
@@ -87,9 +88,10 @@ namespace IdleWithBlazor.Test.Actors
 
     }
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-      await Task.CompletedTask;
+      Dispose();
+      return ValueTask.CompletedTask;
     }
 
     public async Task OnInitialization()

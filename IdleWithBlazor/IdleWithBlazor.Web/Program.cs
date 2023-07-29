@@ -1,4 +1,6 @@
 using Blazored.LocalStorage;
+using IdleWithBlazor.Common.Services;
+using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Web;
 using IdleWithBlazor.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
@@ -8,6 +10,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IConnection, ConnectionService>();
+builder.Services.AddSingleton<IScopedContext<GameRoom>, ScopedContext<GameRoom>>();
 
 builder.Services.AddScoped<IScoped, Scoped>();
 builder.RootComponents.Add<App>("#app");

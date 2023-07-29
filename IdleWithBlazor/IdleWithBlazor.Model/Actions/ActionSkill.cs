@@ -23,15 +23,17 @@ namespace IdleWithBlazor.Model.Actions
     {
       CoolDownTick = TickHelper.GetColdDownTick(AttackSpeed, CoolDown);
     }
-    public virtual bool OnTick()
+
+    public override Task<bool> OnTick()
     {
       if (CoolDownTickRemain > 0)
       {
         CoolDownTickRemain--;
-        return false;
+        return Task.FromResult(false);
       }
       CoolDownTickRemain = CoolDownTick;
-      return true;
+      return Task.FromResult(true); ;
+
     }
   }
 }
