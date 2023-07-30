@@ -14,5 +14,6 @@ namespace IdleWithBlazor.Model.Actors
       set => base.Children = value;
     }
     public GameMap Map { get; set; }
+    public Guid OwnerId { get; set; }
   }
 }

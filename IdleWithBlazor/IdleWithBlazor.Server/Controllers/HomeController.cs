@@ -19,7 +19,7 @@ namespace IdleWithBlazor.Server.Controllers
 
     public IActionResult Index()
     {
-      return Ok(GameService.Room);
+      return Ok();
     }
 
     public IActionResult Privacy()

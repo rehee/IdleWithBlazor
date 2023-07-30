@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Model.Actors;
@@ -57,7 +58,7 @@ namespace IdleWithBlazor.Web.Services
         {
           Console.WriteLine(b);
         });
-        hub.On<string>("RoomMessage", r =>
+        hub.On<string>("CombatMessage", r =>
         {
           var obj = JsonSerializer.Deserialize<GameRoom>(r, ConstSetting.Options);
           room.SetValue(obj);
@@ -81,9 +82,13 @@ namespace IdleWithBlazor.Web.Services
     {
       await hub.SendAsync("KeepSend");
     }
-    public async Task GetRoom()
+    public async Task SetPage(EnumUserPage page)
     {
-      await hub.SendAsync("GetRoom");
+      if (hub == null)
+      {
+        await ConnectionAsync();
+      }
+      await hub.SendAsync("SetUserPage", page);
     }
   }
 }

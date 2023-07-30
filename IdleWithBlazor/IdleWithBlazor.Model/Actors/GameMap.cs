@@ -19,6 +19,32 @@ namespace IdleWithBlazor.Model.Actors
     public List<Player> Players { get; set; }
     public List<Monster> Monsters { get; set; }
 
+    public void Add<T>(T item) where T : class
+    {
+      if (item is Player p)
+      {
+        lock (this)
+        {
+          if (Players == null)
+          {
+            Players = new List<Player>();
+          }
+          Players.Add(p);
+        }
+      }
+      if (item is Monster m)
+      {
+        lock (this)
+        {
+          if (Monsters == null)
+          {
+            Monsters = new List<Monster>();
+          }
+          Monsters.Add(m);
+        }
+      }
+    }
+
 
   }
 }

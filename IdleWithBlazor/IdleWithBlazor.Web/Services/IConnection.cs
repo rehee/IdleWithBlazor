@@ -1,4 +1,6 @@
-﻿namespace IdleWithBlazor.Web.Services
+﻿using IdleWithBlazor.Common.Enums;
+
+namespace IdleWithBlazor.Web.Services
 {
   public interface IConnection
   {
@@ -7,6 +9,6 @@
 
     Task Send();
     Task KeepSend();
-    Task GetRoom();
+    Task SetPage(EnumUserPage page);
   }
 }

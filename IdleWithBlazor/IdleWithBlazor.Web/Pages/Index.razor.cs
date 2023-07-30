@@ -20,7 +20,7 @@ namespace IdleWithBlazor.Web.Pages
     public async Task GetRoom()
     {
       await connection.ConnectionAsync();
-      await connection.GetRoom();
+      
     }
 
   }

@@ -6,7 +6,7 @@ using IdleWithBlazor.Server.Hubs;
 using IdleWithBlazor.Server.Services;
 using IdleWithBlazor.Server.Tasks;
 using Microsoft.AspNetCore.ResponseCompression;
-
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -18,20 +18,10 @@ builder.Services.AddCors(options =>
            .AllowAnyHeader();
   });
 });
-// Add services to the container.
-GameService.Room = new GameRoom();
-var map = new GameMap();
-GameService.Room.Map = map;
-var player = new Player();
-map.Players = new List<Player> { player };
-var mob = new Monster();
-map.Monsters = new List<Monster> { mob };
-var attack = new Attack();
-player.SetAction(attack);
-//attack.SetActor(player);
-attack.Init(1);
-player.SetTarget(mob);
 
+
+builder.Services.AddScoped<IHubServices, HubServices>(sp =>
+  new HubServices(sp.GetService<IHubContext<MyHub>>()));
 builder.Services.AddSingleton<IGameService, GameService>();
 
 builder.Services.AddHostedService<GameTask>();

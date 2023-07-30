@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Server.Services;
 using IdleWithBlazor.Server.Tasks;
@@ -9,22 +10,22 @@ namespace IdleWithBlazor.Server.Hubs
 {
   public class MyHub : Hub
   {
-    public MyHub()
-    {
+    private readonly IHubServices service;
 
+    public MyHub(IHubServices service)
+    {
+      this.service = service;
     }
     public override async Task OnConnectedAsync()
     {
       await base.OnConnectedAsync();
-      Console.WriteLine("connected");
-      var context = this.Context;
       var accessToken = Context.GetHttpContext()?.Request.Query["access_token"];
-      var i = context.UserIdentifier;
-      var id = context.ConnectionId;
-      Console.WriteLine(this.GetHashCode());
-      await Clients.Caller.SendAsync("ReceiveMessage", "", $"{this.GetHashCode()},{context.ConnectionId}");
-      //context.Abort();
-
+      if (String.IsNullOrWhiteSpace(accessToken))
+      {
+        Context.Abort();
+      }
+      var userId = Guid.Parse(accessToken);
+      await service.UserConnected(userId, Context.ConnectionId);
     }
     public async Task SendMessage(string user, string message)
     {
@@ -35,9 +36,9 @@ namespace IdleWithBlazor.Server.Hubs
       Context.Abort();
     }
 
-    public async Task GetRoom()
+    public async Task SetUserPage(EnumUserPage page)
     {
-      await Clients.Caller.SendAsync("RoomMessage", JsonSerializer.Serialize(GameService.Room, JsonSerializerOptionsHelper.Default));
+      await service.SetUserPage(Context.ConnectionId, page);
     }
 
     public async Task KeepSend()
@@ -59,6 +60,11 @@ namespace IdleWithBlazor.Server.Hubs
       await Clients.Caller.SendAsync("ReceiveMessage", $"{this.GetHashCode()}", $"{this.GetHashCode()},{Context.ConnectionId}");
 
       Console.WriteLine("aborted");
+    }
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+      await service.UserLeave(Context.ConnectionId);
+      await base.OnDisconnectedAsync(exception);
     }
   }
 }
