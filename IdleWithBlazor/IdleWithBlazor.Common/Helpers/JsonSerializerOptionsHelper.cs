@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Helpers
 {
   public static class JsonSerializerOptionsHelper
   {
-    private static JsonSerializerOptions _options;
+    private static JsonSerializerOptions? _options;
     public static object lockObj { get; set; } = new object();
     public static JsonSerializerOptions Default
     {
@@ -35,6 +36,7 @@ namespace IdleWithBlazor.Common.Helpers
       option.Converters.Add(new ActionJsonConverter());
       option.Converters.Add(new BigIntegerJsonConverter());
       option.Converters.Add(new TypeJsonConverter());
+      option.Converters.Add(new JsonStringEnumConverter());
     }
   }
 }

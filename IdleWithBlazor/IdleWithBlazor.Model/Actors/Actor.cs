@@ -12,7 +12,7 @@ namespace IdleWithBlazor.Model.Actors
   {
     public abstract Type TypeDiscriminator { get; }
     public Guid Id { get; set; }
-
+    public string? Name { get; set; }
     public virtual IEnumerable<IActor> Children { get; set; }
     [JsonIgnore]
     public IActor? Parent { get; protected set; }

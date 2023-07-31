@@ -1,9 +1,12 @@
 using IdleWithBlazor.Common.Helpers;
+using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Common.Jsons.Converters;
 using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Server.Hubs;
 using IdleWithBlazor.Server.Services;
+using IdleWithBlazor.Server.Services.Items.BlueprintServices;
+using IdleWithBlazor.Server.Services.Items.ItemServices;
 using IdleWithBlazor.Server.Tasks;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
@@ -22,6 +25,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IHubServices, HubServices>(sp =>
   new HubServices(sp.GetService<IHubContext<MyHub>>()));
+builder.Services.AddSingleton<IBluePrintService, BlueprintService>();
+builder.Services.AddSingleton<IItemService, ItemService>();
 builder.Services.AddSingleton<IGameService, GameService>();
 
 builder.Services.AddHostedService<GameTask>();

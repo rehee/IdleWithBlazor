@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdleWithBlazor.Common.DTOs
+namespace IdleWithBlazor.Common.Interfaces.Items
 {
-  public class ActorDTO
+  public interface IDroppable
   {
-    public Guid Id { get; set; }
   }
 }

@@ -11,6 +11,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
   {
     Type TypeDiscriminator { get; }
     Guid Id { get; set; }
+    string? Name { get; set; }
     Task OnInitialization();
     Task<bool> OnTick();
     IEnumerable<IActor> Children { get; set; }

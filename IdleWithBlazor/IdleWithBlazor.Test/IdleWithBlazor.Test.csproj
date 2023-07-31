@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\IdleWithBlazor.Common\IdleWithBlazor.Common.csproj" />
     <ProjectReference Include="..\IdleWithBlazor.Model\IdleWithBlazor.Model.csproj" />
+    <ProjectReference Include="..\IdleWithBlazor.Server\IdleWithBlazor.Server.csproj" />
   </ItemGroup>
 
 </Project>

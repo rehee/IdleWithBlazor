@@ -7,5 +7,7 @@ namespace IdleWithBlazor.Common.Consts
   {
     public const int TickTime = 100;
     public static JsonSerializerOptions Options => JsonSerializerOptionsHelper.Default;
+
+    
   }
 }

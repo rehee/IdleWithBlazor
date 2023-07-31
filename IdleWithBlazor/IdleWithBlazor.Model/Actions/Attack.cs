@@ -37,11 +37,6 @@ namespace IdleWithBlazor.Model.Actions
       {
         lock (sprite)
         {
-          if (sprite.CurrentHp == 0)
-          {
-            sprite.CurrentHp = sprite.MaxHp;
-            return true;
-          }
           sprite.CurrentHp = sprite.CurrentHp - 1;
         }
         return true;

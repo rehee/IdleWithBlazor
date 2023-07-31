@@ -38,7 +38,7 @@ namespace IdleWithBlazor.Test.Actors
   public class TestActor : IActor
   {
     public Type TypeDiscriminator => typeof(TestActor);
-
+    public string Name { get; set; }
     public Guid Id { get; set; }
     public IEnumerable<IActor> Actors { get; set; }
     public IEnumerable<IActor> Children { get; set; }
@@ -76,7 +76,7 @@ namespace IdleWithBlazor.Test.Actors
   public class TestActor2 : IActor
   {
     public Type TypeDiscriminator => typeof(TestActor2);
-
+    public string Name { get; set; }
     public Guid Id { get; set; }
     public IEnumerable<IActor> Actors { get; set; }
     public IEnumerable<IActor> Children { get; set; }
