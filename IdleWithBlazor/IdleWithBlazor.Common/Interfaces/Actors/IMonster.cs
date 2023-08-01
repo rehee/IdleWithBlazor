@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdleWithBlazor.Common.Interfaces
+namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface IGameMap
+  public interface IMonster : ISprite
   {
   }
 }

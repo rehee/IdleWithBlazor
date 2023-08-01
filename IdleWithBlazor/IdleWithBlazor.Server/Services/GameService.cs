@@ -27,25 +27,25 @@ namespace IdleWithBlazor.Server.Services
 
     public Task NewRoomAsync(Guid userId)
     {
-      var game = new GameRoom();
-      game.OwnerId = userId;
-      game.Map = new GameMap();
-      var player = new Player();
-      var mob = new Monster();
-      game.Map.Add(player);
-      game.Map.Add(mob);
-      mob.MaxHp = 50;
-      mob.CurrentHp = 50;
-      var skill = new Attack();
-      skill.Init(1);
-      player.SetAction(skill);
-      player.SetTarget(mob);
-      GameRooms.TryAdd(userId, game);
-      player.PickItem(new Equipment()
-      {
-        Name = "item",
-        EquipmentType = Common.Enums.EnumEquipment.Neck
-      });
+      //var game = new GameRoom();
+      //game.OwnerId = userId;
+      //game.Map = new GameMap();
+      //var player = new Player();
+      //var mob = new Monster();
+      //game.Map.Add(player);
+      //game.Map.Add(mob);
+      //mob.MaxHp = 50;
+      //mob.CurrentHp = 50;
+      //var skill = new Attack();
+      //skill.Init(1);
+      //player.SetAction(skill);
+      //player.SetTarget(mob);
+      //GameRooms.TryAdd(userId, game);
+      //player.PickItem(new Equipment()
+      //{
+      //  Name = "item",
+      //  EquipmentType = Common.Enums.EnumEquipment.Neck
+      //});
       return Task.CompletedTask;
     }
 

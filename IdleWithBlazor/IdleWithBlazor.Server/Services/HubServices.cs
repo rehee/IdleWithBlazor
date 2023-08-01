@@ -1,6 +1,7 @@
 ﻿using IdleWithBlazor.Common.Consts;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
+using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -36,7 +37,7 @@ namespace IdleWithBlazor.Server.Services
       ConnectionIdUserPageMap.AddOrUpdate(connectionId, page, (k, v) => page);
       return Task.CompletedTask;
     }
-    public async Task Broadcast(IEnumerable<GameRoom> games)
+    public async Task Broadcast(IEnumerable<IGameRoom> games)
     {
       var users = ConnectionIdUserMap
         .Select(b =>

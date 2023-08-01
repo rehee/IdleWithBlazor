@@ -1,14 +1,9 @@
 ﻿using IdleWithBlazor.Common.DTOs;
-using IdleWithBlazor.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IdleWithBlazor.Common.Interfaces.Actors;
 
 namespace IdleWithBlazor.Common.Interfaces.Items
 {
-  public interface IBluePrintService
+    public interface IBluePrintService
   {
     Task<bool> AddBluePrint(IBluePrint bluePrint, CancellationToken cancellationToken = default);
     Task<IBluePrint?> GetBluePrintByName(string name, CancellationToken cancellationToken = default);

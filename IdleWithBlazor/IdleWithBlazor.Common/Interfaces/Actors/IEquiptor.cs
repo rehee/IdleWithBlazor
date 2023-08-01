@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface IEquiptor
+  public interface IEquiptor : IActor
   {
     ConcurrentDictionary<EnumEquipmentSlot, IEquipment> Equipments { get; set; }
   }

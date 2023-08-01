@@ -1,5 +1,7 @@
-﻿using IdleWithBlazor.Common.Interfaces.Items;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Common.Jsons.Converters;
+using IdleWithBlazor.Model.Actions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -35,12 +37,20 @@ namespace IdleWithBlazor.Common.Helpers
 
     public static void SetDefaultOption(this JsonSerializerOptions option)
     {
-      option.Converters.Add(new ActionJsonConverter());
-      option.Converters.Add(new ITypedJsonConverter<IGameItem>());
-      option.Converters.Add(new ITypedJsonConverter<IEquipment>());
       option.Converters.Add(new BigIntegerJsonConverter());
       option.Converters.Add(new TypeJsonConverter());
       option.Converters.Add(new JsonStringEnumConverter());
+      option.Converters.Add(new ActionJsonConverter());
+      option.Converters.Add(new ITypedJsonConverter<IGameItem>());
+      option.Converters.Add(new ITypedJsonConverter<IEquipment>());
+      option.Converters.Add(new ITypedJsonConverter<IGameMap>());
+      option.Converters.Add(new ITypedJsonConverter<IGameRoom>());
+      option.Converters.Add(new ITypedJsonConverter<IPlayer>());
+      option.Converters.Add(new ITypedJsonConverter<ISprite>());
+      option.Converters.Add(new ITypedJsonConverter<ICharacters>());
+      option.Converters.Add(new ITypedJsonConverter<IEquiptor>());
+      option.Converters.Add(new ITypedJsonConverter<IActionSkill>());
+      
     }
   }
 }

@@ -1,16 +1,10 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Model.Actions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Actors
 {
-  public abstract class Sprite : Actor
+  public abstract class Sprite : Actor, ISprite
   {
     public virtual BigInteger MaxHp { get; set; }
     public virtual BigInteger CurrentHp { get; set; }
@@ -19,26 +13,29 @@ namespace IdleWithBlazor.Model.Actors
     {
       Target = target;
     }
-    public virtual void SetAction(IActionSkill skill)
+
+
+    public virtual void SetActions(IActionSkill[]? skills)
     {
-      this.ActionSkills = new List<IActionSkill>() { skill };
-      skill.SetParent(this);
+      this.ActionSkills = skills;
+      if (skills == null)
+      {
+        return;
+      }
+      foreach (var skill in skills)
+      {
+        skill.SetParent(this);
+      }
     }
-    public virtual IEnumerable<IActor> ActionSkills { get; set; }
+    public virtual IActionSkill[]? ActionSkills { get; protected set; }
 
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
       if (ActionSkills?.Any() == true)
       {
-        var a = new string[] { };
-        var b = new string[] { };
-
         return (
           await Task.WhenAll(
           (
-          //new Task<bool>[] { base.OnTick() })
-          //.Concat(ActionSkills.Select(b => b.OnTick()))
-          //.ToArray()
           ActionSkills.Select(b => b.OnTick(sp)).ToArray()
           )))
           .All(b => b == true);

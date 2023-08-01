@@ -5,25 +5,16 @@ using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Model.Actors
 {
-  public class Player : Sprite
+  public class Player : Sprite, IPlayer
   {
     public override Type TypeDiscriminator => typeof(Player);
 
-    public Equiptor Inventory { get; set; }
+    
 
-    public void PickItem(IGameItem item)
+    public void SetPlayerFromCharacter(ICharacters character)
     {
-      if (Inventory == null)
-      {
-        Inventory = new Equiptor();
-      }
-      if (item is IEquipment ep)
-      {
-        Inventory.Equip(ep);
-      }
-
-
-
+      this.Id = character.Id;
+      this.Name = character.Name;
     }
   }
 }

@@ -1,4 +1,6 @@
 ﻿using IdleWithBlazor.Common.Enums;
+using IdleWithBlazor.Common.Helpers;
+using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.Actors;
 using System;
@@ -10,100 +12,108 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Characters
 {
-  public class Character : Actor
+  public class Character : Actor, ICharacters
   {
     public override Type TypeDiscriminator => typeof(Character);
 
-
-    private Player _player;
-    [JsonIgnore]
-    public Player ThisPlayer
+    public IGameRoom? Room { get; protected set; }
+    IPlayer? _player { get; set; }
+    public IPlayer ThisPlayer
     {
       get
       {
-        if (_player != null)
+        if (_player == null)
         {
-          return _player;
+          _player = ActorHelper.New<IPlayer>();
+          _player.SetPlayerFromCharacter(this);
         }
-        var newPlayer = new Player();
-        return newPlayer;
+        return _player;
       }
     }
-    public GameRoom CreateRoom()
+
+    public async Task<IGameRoom?> CreateRoomAsync()
     {
-      return new GameRoom();
-    }
-
-    public void JoinRoom(GameRoom room)
-    {
-
-    }
-    public Equiptor? ThisEquiptor { get; set; }
-    public List<IGameItem>? Inventory { get; set; }
-
-    public int Primary { get; set; }
-    public int Endurance { get; set; }
-    public int Reflection { get; set; }
-    public int Will { get; set; }
-
-    public int MaxInventory { get; set; }
-
-    public bool Equip(Guid id)
-    {
-      prepareInventory();
-      lock (this)
+      if (Room != null)
       {
-        var item = Inventory.Where(b => b.Id == id).FirstOrDefault();
-
-
-        Inventory.Remove(item);
+        await Room.CloseGameAsync();
       }
-      return false;
-    }
-    public bool UnEquip(params EnumEquipment[] types)
-    {
-      prepareInventory();
-      lock (this)
+      Room = ActorHelper.New<IGameRoom>();
+      if (Room != null)
       {
-        if ((MaxInventory - Inventory.Count) < types.Count())
-        {
-          return false;
-        }
-        foreach (var type in types)
-        {
-          switch (type)
-          {
-
-          }
-        }
+        await Room.InitAsync(this);
       }
-      return false;
+      return Room;
     }
 
-    public bool Pick(IGameItem item)
+    public async Task<bool> JoinGameAsync(IGameRoom game)
     {
-      prepareInventory();
-      lock (this)
+      try
       {
-        if (Inventory.Count >= MaxInventory)
+        if (await game.JoinGameAsync(this))
         {
-          return false;
+          Room = game;
         }
-        Inventory.Add(item);
         return true;
       }
+      catch
+      {
+        return false;
+      }
     }
 
-    void prepareInventory()
+    public async Task<bool> KickPlayerAsync(Guid playerId)
     {
-      lock (this)
+      if (Room == null || Room.GameOwner?.Id != this.Id)
       {
-        if (Inventory == null)
-        {
-          Inventory = new List<IGameItem>();
-        }
+        return false;
+      }
+      return await Room.KickGuestAsync(playerId);
+    }
+
+    public async Task<bool> LeaveGameAsync()
+    {
+      if (Room == null)
+      {
+        return false;
+      }
+      var result = false;
+      if (Room.GameOwner?.Id == this.Id)
+      {
+        result = await Room.CloseGameAsync();
+      }
+      else
+      {
+        result = await Room.KickGuestAsync(this.Id);
+      }
+      Room = null;
+      return result;
+    }
+
+    public Equiptor Inventory { get; set; }
+
+    public Task<bool> UpdatePlayerAsync()
+    {
+      ThisPlayer.MaxHp = 10;
+      ThisPlayer.CurrentHp = ThisPlayer.MaxHp;
+      
+      return Task.FromResult(true);
+    }
+
+    public void PickItem(IGameItem item)
+    {
+      if (Inventory == null)
+      {
+        Inventory = new Equiptor();
+      }
+      if (item is IEquipment ep)
+      {
+        Inventory.Equip(ep);
       }
 
+
+
     }
+
+
   }
 }

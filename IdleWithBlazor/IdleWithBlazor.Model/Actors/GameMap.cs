@@ -1,51 +1,77 @@
-﻿using IdleWithBlazor.Common.Interfaces.Actors;
+﻿using IdleWithBlazor.Common.Helpers;
+using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.Items;
+using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Model.Actors
 {
-  public class GameMap : Actor
+  public class GameMap : Actor, IGameMap
   {
     public override Type TypeDiscriminator => typeof(GameMap);
     public override IEnumerable<IActor> Children
     {
       get
       {
-        var players = Players != null ? Players : Enumerable.Empty<IActor>();
-        var mobs = Monsters != null ? Monsters : Enumerable.Empty<IActor>();
+        var players = Players.Select(b =>
+        {
+          if (b is IActor a)
+          {
+            return (true, a);
+          }
+          return (false, default(IActor));
+        }).Where(b => b.Item1).Select(b => b.Item2);
+        var mobs = Monsters.Select(b =>
+        {
+          if (b is IActor a)
+          {
+            return (true, a);
+          }
+          return (false, default(IActor));
+        }).Where(b => b.Item1).Select(b => b.Item2);
 
         return players.Concat(mobs);
       }
       set => base.Children = value;
     }
-    public List<Player> Players { get; set; }
-    public List<Monster> Monsters { get; set; }
+    public IEnumerable<IPlayer?> Players => (new IPlayer?[] { owner?.ThisPlayer }).Concat(guests?.Values.Select(b => b.ThisPlayer) ?? Enumerable.Empty<IPlayer?>());
+    public IEnumerable<IMonster?> Monsters => monsters ?? Enumerable.Empty<IMonster?>();
 
-    public void Add<T>(T item) where T : class
+    private List<IMonster> monsters { get; set; }
+
+    private ICharacters? owner { get; set; }
+    private ConcurrentDictionary<Guid, ICharacters>? guests { get; set; }
+
+    public async Task<bool> CloseMapAsync()
     {
-      if (item is Player p)
-      {
-        lock (this)
-        {
-          if (Players == null)
-          {
-            Players = new List<Player>();
-          }
-          Players.Add(p);
-        }
-      }
-      if (item is Monster m)
-      {
-        lock (this)
-        {
-          if (Monsters == null)
-          {
-            Monsters = new List<Monster>();
-          }
-          Monsters.Add(m);
-        }
-      }
+      this.owner = null;
+      this.guests = null;
+      await DisposeAsync();
+      return true;
     }
 
-    
+    public Task<bool> GenerateMobsAsync()
+    {
+      lock (this)
+      {
+        if (monsters == null)
+        {
+          monsters = new List<IMonster>();
+        }
+        monsters.Clear();
+        var m = ActorHelper.New<IMonster>();
+        if (m != null)
+        {
+          monsters.Add(m);
+        }
+      }
+      return Task.FromResult(true);
+    }
+
+    public Task<bool> InitAsync(ICharacters? owner, ConcurrentDictionary<Guid, ICharacters>? guests)
+    {
+      this.owner = owner;
+      this.guests = guests;
+      return Task.FromResult(true);
+    }
   }
 }
