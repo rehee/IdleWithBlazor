@@ -12,7 +12,6 @@ namespace IdleWithBlazor.Model.GameItems.Blurprints
   {
     public BlueprintBase()
     {
-      Name = string.Empty;
     }
     public BlueprintBase(EnumItemType itemType, string name)
     {
@@ -20,7 +19,7 @@ namespace IdleWithBlazor.Model.GameItems.Blurprints
       Name = name;
     }
     public virtual EnumItemType ItemType { get; protected set; }
-    public virtual string Name { get; protected set; }
+    public virtual string Name { get; set; }
     public abstract Task<IGameItem> GenerateGameItemAsync(EnumItemQuality quality, int itemLevel = 1, CancellationToken cancellationToken = default);
   }
 }

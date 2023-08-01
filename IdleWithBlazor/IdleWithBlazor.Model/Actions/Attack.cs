@@ -20,9 +20,9 @@ namespace IdleWithBlazor.Model.Actions
       SetCooldownTick();
     }
 
-    public override async Task<bool> OnTick()
+    public override async Task<bool> OnTick(IServiceProvider sp)
     {
-      var isOntick = await base.OnTick();
+      var isOntick = await base.OnTick(sp);
       if (!isOntick)
       {
         return false;

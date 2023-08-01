@@ -1,12 +1,13 @@
 ﻿using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
+using IdleWithBlazor.Model.GameItems.Items.Equipments;
 using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Server.Services
 {
   public class GameService : IGameService
   {
-    
+
 
     public static ConcurrentDictionary<Guid, GameRoom> GameRooms { get; set; } = new ConcurrentDictionary<Guid, GameRoom>();
 
@@ -40,12 +41,17 @@ namespace IdleWithBlazor.Server.Services
       player.SetAction(skill);
       player.SetTarget(mob);
       GameRooms.TryAdd(userId, game);
+      player.PickItem(new Equipment()
+      {
+        Name = "item",
+        EquipmentType = Common.Enums.EnumEquipment.Neck
+      });
       return Task.CompletedTask;
     }
 
-    public async Task OnTick()
+    public async Task OnTick(IServiceProvider sp)
     {
-      await Task.WhenAll(Games().Select(b => b.OnTick()));
+      await Task.WhenAll(Games().Select(b => b.OnTick(sp)));
     }
   }
 }

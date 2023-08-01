@@ -40,26 +40,8 @@ namespace IdleWithBlazor.Server.Tasks
       var currentGames = service.Games();
       var userWithNoGame = connectedUsers.Where(b => !currentGames.Select(b => b.OwnerId).Contains(b)).ToArray();
       await Task.WhenAll(userWithNoGame.Select(b => service.NewRoomAsync(b)));
-      await service.OnTick();
-      foreach (var g in service.Games())
-      {
-        Console.WriteLine("monseer is dead");
-        
-        var bp = bluePrintService.GetRandomBlueprint(null, null);
-        var item = await itemService.GenerateItemAsync(bp);
-        if (item is IEquipment ep)
-        {
-          await itemService.GenerateRandomProperty(ep);
-        }
-        Console.WriteLine(JsonSerializer.Serialize(item as Equipment, ConstSetting.Options));
-        foreach (var m in g.Map.Monsters)
-        {
-          if (m.CurrentHp <= 0)
-          {
-            
-          }
-        }
-      }
+      await service.OnTick(sp);
+      
 
       await hubService.Broadcast(service.Games());
       await Task.Delay(ConstSetting.TickTime);

@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface IActor : IAsyncDisposable, IDisposable
+  public interface IActor : IAsyncDisposable, IDisposable, ITyped, IName
   {
-    Type TypeDiscriminator { get; }
     Guid Id { get; set; }
-    string? Name { get; set; }
+
     Task OnInitialization();
-    Task<bool> OnTick();
+    Task<bool> OnTick(IServiceProvider sp);
     IEnumerable<IActor> Children { get; set; }
     [JsonIgnore]
     IActor? Parent { get; }

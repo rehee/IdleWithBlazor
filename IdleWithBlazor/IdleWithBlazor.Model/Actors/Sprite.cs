@@ -26,7 +26,7 @@ namespace IdleWithBlazor.Model.Actors
     }
     public virtual IEnumerable<IActor> ActionSkills { get; set; }
 
-    public override async Task<bool> OnTick()
+    public override async Task<bool> OnTick(IServiceProvider sp)
     {
       if (ActionSkills?.Any() == true)
       {
@@ -39,11 +39,11 @@ namespace IdleWithBlazor.Model.Actors
           //new Task<bool>[] { base.OnTick() })
           //.Concat(ActionSkills.Select(b => b.OnTick()))
           //.ToArray()
-          ActionSkills.Select(b => b.OnTick()).ToArray()
+          ActionSkills.Select(b => b.OnTick(sp)).ToArray()
           )))
           .All(b => b == true);
       }
-      return await base.OnTick();
+      return await base.OnTick(sp);
 
     }
 

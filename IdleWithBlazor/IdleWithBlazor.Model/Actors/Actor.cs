@@ -48,11 +48,11 @@ namespace IdleWithBlazor.Model.Actors
       return Task.CompletedTask;
     }
 
-    public virtual async Task<bool> OnTick()
+    public virtual async Task<bool> OnTick(IServiceProvider sp)
     {
       if (Children?.Any() == true)
       {
-        var results = await Task.WhenAll(Children.Select(b => b.OnTick()).ToArray());
+        var results = await Task.WhenAll(Children.Select(b => b.OnTick(sp)).ToArray());
         return results?.All(b => b == true) ?? false;
       }
       return true;

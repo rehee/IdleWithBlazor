@@ -1,6 +1,8 @@
-﻿using IdleWithBlazor.Common.Enums;
+﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Web.Components;
+using System.Text.Json;
 
 namespace IdleWithBlazor.Web.Pages
 {
@@ -21,6 +23,7 @@ namespace IdleWithBlazor.Web.Pages
     private void Room_ValueChange(object? sender, Common.Events.ContextScopeEventArgs<Model.Actors.GameRoom> e)
     {
       Count++;
+      Console.WriteLine(JsonSerializer.Serialize(Room?.Value?.Map.Players.FirstOrDefault().Inventory, ConstSetting.Options));
       StateHasChanged();
     }
     public async override ValueTask DisposeAsync()

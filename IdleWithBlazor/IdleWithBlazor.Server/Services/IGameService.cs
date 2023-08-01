@@ -7,6 +7,6 @@ namespace IdleWithBlazor.Server.Services
     Task NewRoomAsync(Guid userId);
     Task<GameRoom> GetUserRoomAsync(Guid userId);
     IEnumerable<GameRoom> Games();
-    Task OnTick();
+    Task OnTick(IServiceProvider sp);
   }
 }

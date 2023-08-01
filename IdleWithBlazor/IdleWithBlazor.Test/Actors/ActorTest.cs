@@ -61,7 +61,7 @@ namespace IdleWithBlazor.Test.Actors
       await Task.CompletedTask;
     }
 
-    public Task<bool> OnTick()
+    public Task<bool> OnTick(IServiceProvider sp)
     {
       return Task.FromResult(true);
     }
@@ -99,7 +99,7 @@ namespace IdleWithBlazor.Test.Actors
       await Task.CompletedTask;
     }
 
-    public Task<bool> OnTick()
+    public Task<bool> OnTick(IServiceProvider sp)
     {
       return Task.FromResult(true);
     }

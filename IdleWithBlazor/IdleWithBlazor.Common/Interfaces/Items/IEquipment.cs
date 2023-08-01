@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.Enums;
+using IdleWithBlazor.Common.Interfaces.Actors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace IdleWithBlazor.Common.Interfaces.Items
   {
     EnumEquipment EquipmentType { get; set; }
     EnumItemQuality ItemQuality { get; set; }
+
+    
   }
 }

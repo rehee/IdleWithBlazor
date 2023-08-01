@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.Items;
 
 namespace IdleWithBlazor.Model.Actors
 {
@@ -45,5 +46,6 @@ namespace IdleWithBlazor.Model.Actors
       }
     }
 
+    
   }
 }

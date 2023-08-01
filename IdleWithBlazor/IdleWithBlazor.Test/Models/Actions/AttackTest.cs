@@ -20,14 +20,14 @@ namespace IdleWithBlazor.Test.Models.Actions
       var mob = new Monster();
       player.SetTarget(mob);
       attack.SetParent(player);
-      var result = await attack.OnTick();
+      var result = await attack.OnTick(null);
       Assert.IsTrue(result);
       for (var i = 0; i < tick; i++)
       {
-        result = await attack.OnTick();
+        result = await attack.OnTick(null);
         Assert.IsFalse(result);
       }
-      result = await attack.OnTick();
+      result = await attack.OnTick(null);
       Assert.IsTrue(result);
     }
   }

@@ -1,5 +1,7 @@
-﻿using IdleWithBlazor.Common.Jsons.Converters;
+﻿using IdleWithBlazor.Common.Interfaces.Items;
+using IdleWithBlazor.Common.Jsons.Converters;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +36,8 @@ namespace IdleWithBlazor.Common.Helpers
     public static void SetDefaultOption(this JsonSerializerOptions option)
     {
       option.Converters.Add(new ActionJsonConverter());
+      option.Converters.Add(new ITypedJsonConverter<IGameItem>());
+      option.Converters.Add(new ITypedJsonConverter<IEquipment>());
       option.Converters.Add(new BigIntegerJsonConverter());
       option.Converters.Add(new TypeJsonConverter());
       option.Converters.Add(new JsonStringEnumConverter());

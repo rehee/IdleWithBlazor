@@ -24,7 +24,7 @@ namespace IdleWithBlazor.Model.Actions
       CoolDownTick = TickHelper.GetColdDownTick(AttackSpeed, CoolDown);
     }
 
-    public override Task<bool> OnTick()
+    public override Task<bool> OnTick(IServiceProvider sp)
     {
       if (CoolDownTickRemain > 0)
       {

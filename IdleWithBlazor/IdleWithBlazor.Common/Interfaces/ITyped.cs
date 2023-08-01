@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces
 {
-  public interface IName
+  public interface ITyped
   {
-    string? Name { get; set; }
+    Type TypeDiscriminator { get; }
   }
 }
