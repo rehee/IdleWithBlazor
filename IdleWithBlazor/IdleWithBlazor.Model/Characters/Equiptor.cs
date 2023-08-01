@@ -17,26 +17,7 @@ namespace IdleWithBlazor.Model.Characters
   public class Equiptor : Actor, IEquiptor
   {
     public override Type TypeDiscriminator => typeof(Equiptor);
-    //[JsonIgnore]
     public ConcurrentDictionary<EnumEquipmentSlot, IEquipment> Equipments { get; set; }
-
-    //private Dictionary<EnumEquipmentSlot, IEquipment> _EquipmentMapper { get; set; }
-    //public Dictionary<EnumEquipmentSlot, IEquipment> EquipmentMapper
-    //{
-    //  get
-    //  {
-    //    if (_EquipmentMapper == null)
-    //    {
-    //      _EquipmentMapper = Equipments.ToArray().ToDictionary(b => b.Key, b => b.Value);
-    //    }
-    //    return _EquipmentMapper;
-    //  }
-    //  set
-    //  {
-    //    _EquipmentMapper = value;
-    //  }
-    //}
-
 
     public bool Equip(IEquipment equip, int? offset = null)
     {
