@@ -68,6 +68,18 @@ namespace IdleWithBlazor.Model.Characters
       }
       return false;
     }
+    
+    public IEnumerable<IEquipment?> UnEquip(params EnumEquipmentSlot[] equips)
+    {
+      Init();
+      return equips.Select(b =>
+      {
+        var gotValue = Equipments.TryRemove(b, out var item);
+        return (gotValue, item);
+      })
+        .Where(b => b.gotValue == true)
+      .Select(b => b.item);
+    }
     private bool SlotEquiped(EnumEquipment type, int? offset = null)
     {
       Init();
@@ -116,18 +128,6 @@ namespace IdleWithBlazor.Model.Characters
       }
       return true;
     }
-    public IEnumerable<IEquipment?> UnEquip(params EnumEquipmentSlot[] equips)
-    {
-      Init();
-      return equips.Select(b =>
-      {
-        var gotValue = Equipments.TryRemove(b, out var item);
-        return (gotValue, item);
-      })
-        .Where(b => b.gotValue == true)
-      .Select(b => b.item);
-    }
-
     private void Init()
     {
       lock (this)
