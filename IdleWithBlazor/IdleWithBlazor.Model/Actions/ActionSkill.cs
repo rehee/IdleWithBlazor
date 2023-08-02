@@ -60,7 +60,7 @@ namespace IdleWithBlazor.Model.Actions
       if (IsChain)
       {
         var damageChainReduction = Convert.ToInt32(DamageChainReduction * 100);
-        AttackHelper.ChainDamage(TargetNumber, rawDamage, damageChainReduction, ReChainTarget, liveSprite);
+        AttackHelper.ChainDamage(TargetNumber, damageWithMultiple, damageChainReduction, ReChainTarget, liveSprite);
       }
       else
       {

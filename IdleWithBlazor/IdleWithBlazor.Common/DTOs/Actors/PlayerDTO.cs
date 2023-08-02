@@ -8,5 +8,6 @@ namespace IdleWithBlazor.Common.DTOs.Actors
 {
   public class PlayerDTO : SpriteDTO
   {
+    public int CurrentExp { get; set; }
   }
 }

@@ -29,6 +29,7 @@ namespace IdleWithBlazor.Model.Actions
 
     public void SelectSkill(IActionSkill? skill)
     {
+      this.Name = skill?.Name;
       ActionSkill = skill;
     }
 

@@ -1,5 +1,5 @@
 ﻿using IdleWithBlazor.Common.Enums;
-using IdleWithBlazor.Model.GameItems.Blurprints.Equipments;
+using IdleWithBlazor.Model.GameItems.Templates.Equipments;
 using IdleWithBlazor.Model.GameItems.Items.Equipments;
 using System;
 using System.Collections.Generic;

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.DTOs.Actors
 {
-  public class CharacterDTO : ActorDTO
+  public class SkillSlotDTO : ActorDTO
   {
-    public SkillSlotDTO? SkillSlot { get; set; }
+    public string Name { get; set; }
+    public int? Processing { get; set; }
   }
 }

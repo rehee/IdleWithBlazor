@@ -4,11 +4,35 @@
 
 <div class="flex flex-row">
   <div class="flex-1 bg-gray-300">
-    <div>1</div>
-    <div>1</div>
-    <div>1</div>
-    <div>1</div>
-    <div>1</div>
+    <div class="bg-orange-200 grid grid-cols-5 gap-4">
+      @if (Room?.Value?.Owner?.SkillSlot != null)
+      {
+        <div class="col-1">
+          @Room?.Value?.Owner?.SkillSlot.Name
+        </div>
+        <div class="col-span-3">
+
+          <div class="bg-gray-300 h-4 rounded-full">
+            <div class="bg-blue-500 h-full rounded-full" style="width: @(Room?.Value?.Owner?.SkillSlot.Processing)%;">
+              
+            </div>
+          </div>
+        </div>
+
+      }
+      @if (Room?.Value?.GameMap?.Players?.Any() == true)
+      {
+        foreach (var p in Room?.Value?.GameMap?.Players)
+        {
+          <div class="col-span-3">
+            @p.Name @p.Level @p.CurrentExp
+          </div>
+
+
+
+        }
+      }
+    </div>
   </div>
   <div class="flex-1 bg-gray-400">
     @if (Mobs != null)
@@ -17,12 +41,12 @@
       {
         <div class="bg-orange-400 grid grid-cols-5 gap-4">
           <div class="col-1">
-            p
+            @b.Name (@b.Level)
           </div>
           <div class="col-span-3">
 
             <div class="bg-gray-300 h-4 rounded-full">
-              <div class="bg-blue-500 h-full rounded-full" style="width: @(b.CurrentHp * 100 / b.MaxHp)%;">
+              <div class="bg-blue-500 h-full rounded-full" style="width: @(b.CurrentHp>0?(b.CurrentHp * 100 / b.MaxHp):0)%;">
                 @b.CurrentHp
               </div>
             </div>
@@ -30,7 +54,7 @@
         </div>
       }
     }
-    
+
 
   </div>
 </div>

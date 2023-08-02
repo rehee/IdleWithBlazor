@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.DTOs.Actors;
 using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.GameActions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -59,10 +60,24 @@ namespace IdleWithBlazor.Common.Helpers
       {
         dto.MaxHp = input.MaxHp;
         dto.CurrentHp = input.CurrentHp;
+        dto.Level = input.Level;
       });
+      AddDTOMapper<IPlayer, PlayerDTO>((input, dto) =>
+      {
+        dto.CurrentExp = input.CurrentExp;
+      });
+
       AddDTOMapper<ICharacter, CharacterDTO>((input, dto) =>
       {
-
+        dto.SkillSlot = input.ActionSlots?.ToDTO<SkillSlotDTO>();
+      });
+      AddDTOMapper<IActionSlot, SkillSlotDTO>((input, dto) =>
+      {
+        dto.Name = input.Name;
+        if (input.CoolDownTick.HasValue && input.CoolDownTick != 0)
+        {
+          dto.Processing = ((input.CoolDownTick - input.CoolDownTickRemain) * 100) / input.CoolDownTick;
+        }
       });
       AddDTOMapper<ICharacter, CharacterDetailDTO>((input, dto) =>
       {

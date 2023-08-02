@@ -23,14 +23,18 @@ namespace IdleWithBlazor.Model.Characters
         return _player;
       }
     }
-
+    public int BaseAttack { get; set; }
     public void Init()
     {
       ActionSlots = ActorHelper.New<IActionSlot>();
       ActionSlots.Init(this);
       ActionSlots.SelectSkill(ActorHelper.ActionSkillPool.FirstOrDefault());
       ActionSlots.UpdateActionSlot();
-      if(_player == null)
+      Level = 1;
+      CurrentExp = 0;
+      NextLevelExp = ExpHelper.GetNextLevelExp(Level);
+      EnableLevelUp = true;
+      if (_player == null)
       {
         _player = ActorHelper.New<IPlayer>();
         _player.SetPlayerFromCharacter(this);
@@ -98,12 +102,19 @@ namespace IdleWithBlazor.Model.Characters
     public Equiptor Inventory { get; set; }
 
     public IActionSlot ActionSlots { get; set; }
+    public int CurrentExp { get; set; }
+    public int NextLevelExp { get; set; }
+    public bool EnableLevelUp { get; set; }
+    public int Level { get; set; }
 
     public Task<bool> UpdatePlayerAsync()
     {
-      ThisPlayer.MaxHp = 10;
-      ThisPlayer.CurrentHp = ThisPlayer.MaxHp;
-
+      ThisPlayer.MaxHp = ThisPlayer.MaxHp;
+      ThisPlayer.NextLevelExp = NextLevelExp;
+      ThisPlayer.CurrentExp = CurrentExp;
+      ThisPlayer.Level = Level;
+      ThisPlayer.MinAttack = BaseAttack;
+      ThisPlayer.MaxAttack = BaseAttack;
       return Task.FromResult(true);
     }
 
@@ -122,6 +133,11 @@ namespace IdleWithBlazor.Model.Characters
 
     }
 
-
+    public Task<bool> GainCurrency(int exp)
+    {
+      ExpHelper.GainExp(exp, this);
+      BaseAttack = 1 + Level;
+      return UpdatePlayerAsync();
+    }
   }
 }

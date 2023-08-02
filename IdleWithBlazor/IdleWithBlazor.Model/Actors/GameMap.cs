@@ -37,7 +37,7 @@ namespace IdleWithBlazor.Model.Actors
     public IEnumerable<IMonster?> Monsters => monsters ?? Enumerable.Empty<IMonster?>();
 
     private List<IMonster> monsters { get; set; }
-    
+
     private ICharacter? owner { get; set; }
     private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
 
@@ -53,18 +53,31 @@ namespace IdleWithBlazor.Model.Actors
     {
       lock (this)
       {
+        if (!FirstRespawn && MonsterRespawn > 0)
+        {
+          MonsterRespawn--;
+          return Task.FromResult(false);
+        }
+        FirstRespawn = false;
+        MonsterRespawn = MonsterRespawnRate;
         if (monsters == null)
         {
           monsters = new List<IMonster>();
         }
         monsters.Clear();
-        var m = ActorHelper.New<IMonster>();
-        m.CurrentHp = 100;
-        m.MaxHp = 100;
-        if (m != null)
+        for (var i = 0; i < 5; i++)
         {
-          monsters.Add(m);
+          var m = ActorHelper.New<IMonster>();
+          m.Name = "小野怪";
+          m.CurrentHp = 10;
+          m.MaxHp = 10;
+          m.Level = 1;
+          if (m != null)
+          {
+            monsters.Add(m);
+          }
         }
+
       }
       return Task.FromResult(true);
     }
@@ -73,9 +86,14 @@ namespace IdleWithBlazor.Model.Actors
     {
       this.owner = owner;
       this.guests = guests;
+      MonsterRespawnRate = 50;
+      MonsterRespawn = MonsterRespawnRate;
+      FirstRespawn = true;
       return Task.FromResult(true);
     }
-
+    private bool FirstRespawn { get; set; }
+    public int MonsterRespawnRate { get; set; }
+    public int MonsterRespawn { get; set; }
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
       var baseResult = await base.OnTick(sp);
@@ -86,7 +104,21 @@ namespace IdleWithBlazor.Model.Actors
         {
           continue;
         }
-        await player.ActionSlots.ActionSkill.Attack(player, monster.Where(b => b != null));
+        var livedMonster = monster.Where(b => b.CurrentHp > 0).ToArray();
+        await player.ActionSlots.ActionSkill.Attack(player, livedMonster);
+        var killedMonster = livedMonster.Where(b => b.CurrentHp <= 0).ToArray();
+        foreach (var m in killedMonster)
+        {
+          var exp = ExpHelper.GetMonsterExp(m.Level);
+          await owner.GainCurrency(exp);
+          await Task.WhenAll(guests.Values.Select(b => b.GainCurrency(exp)));
+        }
+        livedMonster = null;
+        killedMonster = null;
+      }
+      if (monster.All(b => b.CurrentHp <= 0))
+      {
+        await GenerateMobsAsync();
       }
       return baseResult;
     }

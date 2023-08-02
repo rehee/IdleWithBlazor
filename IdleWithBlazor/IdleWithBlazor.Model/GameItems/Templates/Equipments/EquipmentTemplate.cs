@@ -1,13 +1,9 @@
 ﻿using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Interfaces.Items;
+using IdleWithBlazor.Model.GameItems.Blurprints;
 using IdleWithBlazor.Model.GameItems.Items.Equipments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IdleWithBlazor.Model.GameItems.Blurprints.Equipments
+namespace IdleWithBlazor.Model.GameItems.Templates.Equipments
 {
   public class EquipmentTemplate : TemplateBase
   {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface ISprite : IActor
+  public interface ISprite : IActor, ILeveled
   {
     BigInteger MaxHp { get; set; }
     BigInteger CurrentHp { get; set; }

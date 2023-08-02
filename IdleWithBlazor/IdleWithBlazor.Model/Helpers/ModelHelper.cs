@@ -46,21 +46,24 @@ namespace IdleWithBlazor.Model.Helpers
       new ActionSkillInfoDTO
       {
         Id = Guid.NewGuid(),
-        Name = "攻击",
-        DamageRate=1,
+        Name = "连锁闪电",
+        DamageRate=8,
         AttackSpeedRate = 1,
-        TargetNumber=1,
-        CoolDown=0,
-      },
-      new ActionSkillInfoDTO
-      {
-        Id = Guid.NewGuid(),
-        Name = "英勇打击",
-        DamageRate=1.5m,
-        AttackSpeedRate = 1,
-        TargetNumber=1,
+        TargetNumber=5,
+        DamageChainReduction=0.75m,
+        IsChain=true,
+        ReChainTarget=false,
         CoolDown=3,
       },
+      //new ActionSkillInfoDTO
+      //{
+      //  Id = Guid.NewGuid(),
+      //  Name = "英勇打击",
+      //  DamageRate=1.5m,
+      //  AttackSpeedRate = 1,
+      //  TargetNumber=1,
+      //  CoolDown=3,
+      //},
     };
   }
 }

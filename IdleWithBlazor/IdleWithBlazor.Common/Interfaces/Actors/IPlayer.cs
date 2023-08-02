@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface IPlayer : ISprite
+  public interface IPlayer : ISprite, ILevelupable
   {
     void SetPlayerFromCharacter(ICharacter character);
    

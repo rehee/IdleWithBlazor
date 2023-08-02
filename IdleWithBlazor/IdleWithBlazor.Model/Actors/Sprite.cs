@@ -6,6 +6,7 @@ namespace IdleWithBlazor.Model.Actors
 {
   public abstract class Sprite : Actor, ISprite
   {
+    public int Level { get; set; }
     public virtual BigInteger MaxHp { get; set; }
     public virtual BigInteger CurrentHp { get; set; }
     public int MinAttack { get; set; }
@@ -30,6 +31,8 @@ namespace IdleWithBlazor.Model.Actors
 
 
     IActionSkill[]? ISprite.ActionSkills => throw new NotImplementedException();
+
+
 
     public override async Task<bool> OnTick(IServiceProvider sp)
     {

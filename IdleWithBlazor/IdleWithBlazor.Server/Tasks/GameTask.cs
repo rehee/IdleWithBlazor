@@ -1,13 +1,8 @@
 ﻿using IdleWithBlazor.Common.Consts;
 using IdleWithBlazor.Common.Enums;
-using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Items;
-using IdleWithBlazor.Model.GameItems.Blurprints.Equipments;
-using IdleWithBlazor.Model.GameItems.Items.Equipments;
-using IdleWithBlazor.Server.Hubs;
+using IdleWithBlazor.Model.GameItems.Templates.Equipments;
 using IdleWithBlazor.Server.Services;
-using Microsoft.AspNetCore.SignalR;
-using System.Text.Json;
 
 namespace IdleWithBlazor.Server.Tasks
 {

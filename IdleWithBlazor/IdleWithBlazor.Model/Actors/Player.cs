@@ -10,6 +10,10 @@ namespace IdleWithBlazor.Model.Actors
   {
     public override Type TypeDiscriminator => typeof(Player);
 
+    public int CurrentExp { get; set; }
+    public int NextLevelExp { get; set; }
+    public bool EnableLevelUp { get; set; }
+    
     IActionSkill[]? ISprite.ActionSkills => throw new NotImplementedException();
 
     public void SetActions(IActionSkill[]? skills)
@@ -21,6 +25,11 @@ namespace IdleWithBlazor.Model.Actors
     {
       this.Id = character.Id;
       this.Name = character.Name;
+      this.Level = character.Level;
+      this.CurrentExp = character.CurrentExp;
+      this.NextLevelExp = character.NextLevelExp;
+      this.MinAttack = character.BaseAttack;
+      this.MaxAttack = character.BaseAttack;
       SetActionSlots(character.ActionSlots);
     }
   }

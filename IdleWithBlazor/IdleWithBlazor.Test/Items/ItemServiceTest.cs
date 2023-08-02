@@ -1,14 +1,9 @@
 ﻿using IdleWithBlazor.Common.DTOs;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Interfaces.Items;
-using IdleWithBlazor.Model.GameItems.Blurprints.Equipments;
+using IdleWithBlazor.Model.GameItems.Templates.Equipments;
 using IdleWithBlazor.Server.Services.Items.TemplateServices;
 using IdleWithBlazor.Server.Services.Items.ItemServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Test.Items
 {

@@ -30,7 +30,7 @@ namespace IdleWithBlazor.Server.Services
 
     public async Task NewRoomAsync(Guid userId)
     {
-      var character = ActorHelper.New<ICharacter>(userId);
+      var character = ActorHelper.New<ICharacter>(userId, "查内姆");
       character.Init();
       var game = await character.CreateRoomAsync();
       await game.CreateMapAsync();
