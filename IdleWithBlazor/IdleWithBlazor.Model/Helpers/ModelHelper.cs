@@ -26,8 +26,15 @@ namespace IdleWithBlazor.Model.Helpers
       ActorHelper.AddMapper<IActionSkill, ActionSkill>();
       ActorHelper.AddMapper<IActionSlot, ActionSlot>();
     }
+    public static bool IsInit { get; set; }
     public static void InitModel()
     {
+      if (IsInit)
+      {
+        return;
+      }
+      IsInit = true;
+      ActorDTOHelper.InitDTOMapper();
       InitMapper();
       ActorHelper.UpdateActionPool(
        ActionsDtos.Select(b => new ActionSkill(b)).ToArray()

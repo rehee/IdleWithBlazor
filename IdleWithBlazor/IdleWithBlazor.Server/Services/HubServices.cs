@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.DTOs.Actors;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
@@ -70,7 +71,7 @@ namespace IdleWithBlazor.Server.Services
 
             try
             {
-              combatJson = JsonSerializer.Serialize(q.Geme.ToDTO(), ConstSetting.Options);
+              combatJson = JsonSerializer.Serialize(q.Geme.ToDTO<GameRoomDTO>(), ConstSetting.Options);
             }
             catch (Exception ex)
             {

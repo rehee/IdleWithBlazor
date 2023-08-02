@@ -10,7 +10,7 @@ namespace IdleWithBlazor.Model.Characters
   {
     public override Type TypeDiscriminator => typeof(Character);
 
-    public IGameRoom? Room { get; protected set; }
+    public IGameRoom? Room { get; set; }
     IPlayer? _player { get; set; }
     public IPlayer ThisPlayer
     {

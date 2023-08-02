@@ -8,29 +8,29 @@ namespace IdleWithBlazor.Server.Services.Items.ItemServices
 {
   public class ItemService : IItemService
   {
-    private IBluePrintService bluePrintService { get; set; }
-    public ItemService(IBluePrintService bluePrintService)
+    private ITemplateService TemplateService { get; set; }
+    public ItemService(ITemplateService TemplateService)
     {
-      this.bluePrintService = bluePrintService;
+      this.TemplateService = TemplateService;
     }
 
     public async Task<IGameItem?> GenerateItemAsync(ItemPrepareDTO dto, CancellationToken cancellationToken = default)
     {
-      var bluePrint = dto.BluePrint;
-      if (bluePrint == null)
+      var Template = dto.Template;
+      if (Template == null)
       {
         return null;
       }
-      return await bluePrint.GenerateGameItemAsync(dto.Quality, dto.ItemLevel, cancellationToken);
+      return await Template.GenerateGameItemAsync(dto.Quality, dto.ItemLevel, cancellationToken);
     }
 
     public Task GenerateRandomProperty(IEquipment equipment)
     {
-      var properties = bluePrintService.GetRandomProperties(equipment);
+      var properties = TemplateService.GetRandomProperties(equipment);
       var typeProperties = equipment.GetType().GetProperties();
       foreach (var property in properties)
       {
-        var value = bluePrintService.GetPropertyValue(property, equipment);
+        var value = TemplateService.GetPropertyValue(property, equipment);
         if (value == null)
         {
           continue;

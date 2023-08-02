@@ -2,6 +2,6 @@
 {
   public class Setting
   {
-    public string SettingUrl { get; set; }
+    public string ServerHost { get; set; }
   }
 }

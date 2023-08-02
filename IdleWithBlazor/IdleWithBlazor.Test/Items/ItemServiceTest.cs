@@ -2,7 +2,7 @@
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.GameItems.Blurprints.Equipments;
-using IdleWithBlazor.Server.Services.Items.BlueprintServices;
+using IdleWithBlazor.Server.Services.Items.TemplateServices;
 using IdleWithBlazor.Server.Services.Items.ItemServices;
 using System;
 using System.Collections.Generic;
@@ -17,21 +17,21 @@ namespace IdleWithBlazor.Test.Items
     [SetUp]
     public async Task Setup()
     {
-      services = new BlueprintService();
+      services = new TemplateService();
       foreach (var bp in TestQueue)
       {
-        await services.AddBluePrint(bp);
+        await services.AddTemplate(bp);
       }
       itemService = new ItemService(services);
     }
-    protected IBluePrintService services { get; set; }
+    protected ITemplateService services { get; set; }
     protected IItemService itemService { get; set; }
-    protected static IBluePrint[] TestQueue = new IBluePrint[]
+    protected static ITemplate[] TestQueue = new ITemplate[]
     {
-      new EquipmentBlueprint(EnumEquipment.Body,"body_Aromor"),
-      new EquipmentBlueprint(EnumEquipment.OneHand,"On_Hand_Sword"),
-      new EquipmentBlueprint(EnumEquipment.Waist,"waist_Aromor"),
-      new EquipmentBlueprint(EnumEquipment.Foot,"foot_Aromor"),
+      new EquipmentTemplate(EnumEquipment.Body,"body_Aromor"),
+      new EquipmentTemplate(EnumEquipment.OneHand,"On_Hand_Sword"),
+      new EquipmentTemplate(EnumEquipment.Waist,"waist_Aromor"),
+      new EquipmentTemplate(EnumEquipment.Foot,"foot_Aromor"),
     };
     [TestCase("1", EnumItemQuality.Set, 1, true)]
     [TestCase("On_Hand_Sword", EnumItemQuality.Set, 1, false)]
@@ -39,7 +39,7 @@ namespace IdleWithBlazor.Test.Items
     {
       var dto = new ItemPrepareDTO
       {
-        BluePrint = await services.GetBluePrintByName(name),
+        Template = await services.GetTemplateByName(name),
         Quality = quality,
         ItemLevel = itemLevel,
       };
@@ -49,10 +49,10 @@ namespace IdleWithBlazor.Test.Items
         Assert.IsNull(actual);
         return;
       }
-      var bluePrint = await services.GetBluePrintByName(name);
+      var Template = await services.GetTemplateByName(name);
 
-      Assert.That(actual.Name, Is.EqualTo(bluePrint.Name));
-      Assert.That(actual.ItemType, Is.EqualTo(bluePrint.ItemType));
+      Assert.That(actual.Name, Is.EqualTo(Template.Name));
+      Assert.That(actual.ItemType, Is.EqualTo(Template.ItemType));
       if (actual is IEquipment equipment)
       {
         Assert.That(equipment.ItemQuality, Is.EqualTo(quality));

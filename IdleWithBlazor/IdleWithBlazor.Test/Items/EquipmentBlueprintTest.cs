@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Test.Items
 {
-  public class EquipmentBlueprintTest
+  public class EquipmentTemplateTest
   {
     [TestCase("item1", EnumEquipment.OffHand, EnumItemQuality.Unique, 1)]
     [TestCase("item2", EnumEquipment.Foot, EnumItemQuality.Unique, 1)]
@@ -19,10 +19,10 @@ namespace IdleWithBlazor.Test.Items
     [TestCase("item6", EnumEquipment.Body, EnumItemQuality.Normal, 1)]
     [TestCase("item7", EnumEquipment.Foot, EnumItemQuality.Rare, 1)]
     [TestCase("item8", EnumEquipment.Finger, EnumItemQuality.Unique, 1)]
-    public async Task EquipmentBlueprintCreateTest(string name, EnumEquipment equipment, EnumItemQuality quality, int itemLevel)
+    public async Task EquipmentTemplateCreateTest(string name, EnumEquipment equipment, EnumItemQuality quality, int itemLevel)
     {
-      var bluePrint = new EquipmentBlueprint(equipment, name);
-      var actual = await bluePrint.GenerateGameItemAsync(quality, itemLevel);
+      var Template = new EquipmentTemplate(equipment, name);
+      var actual = await Template.GenerateGameItemAsync(quality, itemLevel);
       Equipment equip = null;
       bool isEquip = false;
       if (actual is Equipment eq)

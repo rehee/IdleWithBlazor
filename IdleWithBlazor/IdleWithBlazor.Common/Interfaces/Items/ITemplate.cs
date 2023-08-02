@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Items
 {
-  public interface IBluePrint : IName
+  public interface ITemplate : IName
   {
     EnumItemType ItemType { get; }
 

@@ -15,18 +15,18 @@ namespace IdleWithBlazor.Server.Tasks
   {
     private readonly IGameService service;
     private readonly IServiceProvider sp;
-    private readonly IBluePrintService bluePrintService;
+    private readonly ITemplateService TemplateService;
     private readonly IItemService itemService;
 
     IHubServices? hubService { get; set; }
-    public GameTask(IGameService service, IServiceProvider sp, IBluePrintService bluePrintService, IItemService itemService)
+    public GameTask(IGameService service, IServiceProvider sp, ITemplateService TemplateService, IItemService itemService)
     {
       this.service = service;
       this.sp = sp;
-      this.bluePrintService = bluePrintService;
+      this.TemplateService = TemplateService;
       this.itemService = itemService;
-      bluePrintService.AddBluePrint(new EquipmentBlueprint(EnumEquipment.OneHand, "匕首"));
-      bluePrintService.AddBluePrint(new EquipmentBlueprint(EnumEquipment.TwoHands, "大斧头"));
+      TemplateService.AddTemplate(new EquipmentTemplate(EnumEquipment.OneHand, "匕首"));
+      TemplateService.AddTemplate(new EquipmentTemplate(EnumEquipment.TwoHands, "大斧头"));
     }
     int count = 0;
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

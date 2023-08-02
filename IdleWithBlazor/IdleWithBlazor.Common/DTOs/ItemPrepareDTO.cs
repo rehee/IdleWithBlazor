@@ -10,7 +10,7 @@ namespace IdleWithBlazor.Common.DTOs
 {
   public class ItemPrepareDTO
   {
-    public IBluePrint BluePrint { get; set; }
+    public ITemplate Template { get; set; }
     public EnumItemQuality Quality { get; set; }
     public int ItemLevel { get; set; }
   }

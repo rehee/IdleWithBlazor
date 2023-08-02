@@ -3,6 +3,7 @@ using IdleWithBlazor.Common.DTOs.Actors;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Services;
+using IdleWithBlazor.Web.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.Json;
 
@@ -12,12 +13,14 @@ namespace IdleWithBlazor.Web.Services
   {
     private readonly IStorageService storage;
     private readonly IScopedContext<GameRoomDTO> room;
+    private readonly Setting setting;
 
     private HubConnection? hub { get; set; } = null;
-    public ConnectionService(IStorageService storage, IScopedContext<GameRoomDTO> room)
+    public ConnectionService(IStorageService storage, IScopedContext<GameRoomDTO> room, Setting setting)
     {
       this.storage = storage;
       this.room = room;
+      this.setting = setting;
     }
     public async Task<bool> AbortAsync()
     {
@@ -46,7 +49,7 @@ namespace IdleWithBlazor.Web.Services
         return false;
       }
       hub = new HubConnectionBuilder()
-       .WithUrl("https://localhost:5001/myhub", options =>
+       .WithUrl($"{setting.ServerHost}/myhub", options =>
        {
          options.AccessTokenProvider = () => Task.FromResult<string?>(token);
        })

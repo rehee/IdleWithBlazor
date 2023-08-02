@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.DTOs.Actors
 {
-  public class ActorDTO : IActorDTO
+  public class CharacterDetailDTO : CharacterDTO
   {
-    public Guid Id { get; set; }
-    public string? Name { get; set; }
+    public GameSummaryDTO? GameSummary { get; set; }
+
   }
 }

@@ -6,20 +6,20 @@ using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.Items;
 using System.Collections.Concurrent;
 
-namespace IdleWithBlazor.Server.Services.Items.BlueprintServices
+namespace IdleWithBlazor.Server.Services.Items.TemplateServices
 {
-  public class BlueprintService : IBluePrintService
+  public class TemplateService : ITemplateService
     {
-    private static ConcurrentDictionary<string, IBluePrint> mapper = new ConcurrentDictionary<string, IBluePrint>();
-    public Task<bool> AddBluePrint(IBluePrint bluePrint, CancellationToken cancellationToken = default)
+    private static ConcurrentDictionary<string, ITemplate> mapper = new ConcurrentDictionary<string, ITemplate>();
+    public Task<bool> AddTemplate(ITemplate template, CancellationToken cancellationToken = default)
     {
-      if (bluePrint == null)
+      if (template == null)
       {
         return Task.FromResult(false);
       }
       try
       {
-        mapper.AddOrUpdate(bluePrint.Name, bluePrint, (n, p) => bluePrint);
+        mapper.AddOrUpdate(template.Name, template, (n, p) => template);
         return Task.FromResult(true);
       }
       catch
@@ -28,13 +28,13 @@ namespace IdleWithBlazor.Server.Services.Items.BlueprintServices
       }
     }
 
-    public Task<IBluePrint?> GetBluePrintByName(string name, CancellationToken cancellationToken = default)
+    public Task<ITemplate?> GetTemplateByName(string name, CancellationToken cancellationToken = default)
     {
       if (mapper.TryGetValue(name, out var bp))
       {
-        return Task.FromResult<IBluePrint?>(bp);
+        return Task.FromResult<ITemplate?>(bp);
       }
-      return Task.FromResult<IBluePrint?>(null);
+      return Task.FromResult<ITemplate?>(null);
     }
 
     public Task<bool> RemoveluePrint(string name, CancellationToken cancellationToken = default)
@@ -63,7 +63,7 @@ namespace IdleWithBlazor.Server.Services.Items.BlueprintServices
     {
       return ConstItem.AllPropertyNumberGrowth[name].GetValue(equipment.ItemLevel);
     }
-    public ItemPrepareDTO GetRandomBlueprint(IGameMap? map, IDroppable? actor)
+    public ItemPrepareDTO GetRandomTemplate(IGameMap? map, IDroppable? actor)
     {
       var rareCount = ItemHelper.GetRandomIntValue(1000, 1, 100);
       EnumItemQuality quality = EnumItemQuality.Normal;
@@ -87,10 +87,10 @@ namespace IdleWithBlazor.Server.Services.Items.BlueprintServices
       {
         quality = EnumItemQuality.Normal;
       }
-      var blueprint = ItemHelper.GetRandomArray(1, mapper.Values.ToArray());
+      var Template = ItemHelper.GetRandomArray(1, mapper.Values.ToArray());
       return new ItemPrepareDTO
       {
-        BluePrint = ItemHelper.GetRandomArray(1, mapper.Values.ToArray()).FirstOrDefault(),
+        Template = ItemHelper.GetRandomArray(1, mapper.Values.ToArray()).FirstOrDefault(),
         ItemLevel = ItemHelper.GetRandomIntValue(1000, 1, 100).Value,
         Quality = quality
       };

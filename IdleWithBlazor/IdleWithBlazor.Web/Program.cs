@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-var e = builder.HostEnvironment.Environment;
-var add = builder.HostEnvironment.BaseAddress;
-object value = builder.Configuration.AddEnvironmentVariables();
-var set = builder.Configuration["Setting_SettingUrl"];
-Console.WriteLine($"{add}_{e}");
+var setting = new Setting
+{
+  ServerHost = builder.Configuration["ServerHost"]
+};
+Console.WriteLine(setting.ServerHost);
+builder.Services.AddSingleton<Setting>(sp => setting);
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();

@@ -22,7 +22,7 @@ namespace IdleWithBlazor.Model.Actors
 
     private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
     [JsonIgnore]
-    public ICharacter[] Guests => guests?.Select(b => b.Value).ToArray() ?? Enumerable.Empty<ICharacter>().ToArray();
+    public ICharacter[]? Guests => guests?.Select(b => b.Value).ToArray();
 
     public IGameMap? Map { get; set; }
 

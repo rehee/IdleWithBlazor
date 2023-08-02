@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.GameItems.Blurprints
 {
-  public abstract class BlueprintBase : IBluePrint
+  public abstract class TemplateBase : ITemplate
   {
-    public BlueprintBase()
+    public TemplateBase()
     {
     }
-    public BlueprintBase(EnumItemType itemType, string name)
+    public TemplateBase(EnumItemType itemType, string name)
     {
       ItemType = itemType;
       Name = name;

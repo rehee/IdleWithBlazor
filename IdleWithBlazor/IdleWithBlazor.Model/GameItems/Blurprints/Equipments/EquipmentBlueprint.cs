@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.GameItems.Blurprints.Equipments
 {
-  public class EquipmentBlueprint : BlueprintBase
+  public class EquipmentTemplate : TemplateBase
   {
-    public EquipmentBlueprint() : base()
+    public EquipmentTemplate() : base()
     {
 
     }
-    public EquipmentBlueprint(EnumEquipment equipment, string name) : base(EnumItemType.Equipment, name)
+    public EquipmentTemplate(EnumEquipment equipment, string name) : base(EnumItemType.Equipment, name)
     {
       EquipmentType = equipment;
       Name = name;

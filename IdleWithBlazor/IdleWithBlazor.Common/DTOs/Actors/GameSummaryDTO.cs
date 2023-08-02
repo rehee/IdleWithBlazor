@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.DTOs.Actors
 {
-  public class GameRoomDTO: ActorDTO
+  public class GameSummaryDTO : ActorDTO
   {
-    public CharacterDTO? Owner { get; set; }
     public IEnumerable<CharacterDTO>? Guests { get; set; }
-    public GameMapDTO? GameMap { get; set; }
   }
 }
