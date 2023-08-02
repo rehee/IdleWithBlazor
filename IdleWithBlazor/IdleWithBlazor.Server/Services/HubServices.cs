@@ -66,7 +66,17 @@ namespace IdleWithBlazor.Server.Services
         switch (q.Page)
         {
           case EnumUserPage.Combat:
-            return q.Client.SendAsync("CombatMessage", JsonSerializer.Serialize(q.Geme, ConstSetting.Options));
+            string combatJson = null;
+
+            try
+            {
+              combatJson = JsonSerializer.Serialize(q.Geme, ConstSetting.Options);
+            }
+            catch (Exception ex)
+            {
+              var a = ex;
+            }
+            return q.Client.SendAsync("CombatMessage", combatJson);
           default:
             return Task.CompletedTask;
         }

@@ -1,6 +1,7 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
 
 namespace IdleWithBlazor.Model.Actors
 {
@@ -15,13 +16,15 @@ namespace IdleWithBlazor.Model.Actors
       }
       set => base.Children = value;
     }
-    public Guid? OwnerId => GameOwner?.Id;
+    public Guid? OwnerId { get; set; }
+    [JsonIgnore]
     public ICharacters? GameOwner { get; private set; }
 
     private ConcurrentDictionary<Guid, ICharacters>? guests { get; set; }
+    [JsonIgnore]
     public ICharacters[] Guests => guests?.Select(b => b.Value).ToArray() ?? Enumerable.Empty<ICharacters>().ToArray();
 
-    public IGameMap? Map { get; private set; }
+    public IGameMap? Map { get; set; }
 
     public async Task<bool> CloseGameAsync()
     {
@@ -66,6 +69,7 @@ namespace IdleWithBlazor.Model.Actors
       lock (this)
       {
         GameOwner = owner;
+        OwnerId = owner.Id;
         guests = new ConcurrentDictionary<Guid, ICharacters>();
         return Task.FromResult(true);
       }

@@ -1,7 +1,10 @@
-﻿using IdleWithBlazor.Model.Actions;
+﻿using IdleWithBlazor.Common.Helpers;
+using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Model.GameItems.Items.Equipments;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace IdleWithBlazor.Server.Services
 {
@@ -9,24 +12,29 @@ namespace IdleWithBlazor.Server.Services
   {
 
 
-    public static ConcurrentDictionary<Guid, GameRoom> GameRooms { get; set; } = new ConcurrentDictionary<Guid, GameRoom>();
+    public static ConcurrentDictionary<Guid, IGameRoom> GameRooms { get; set; } = new ConcurrentDictionary<Guid, IGameRoom>();
 
-    public IEnumerable<GameRoom> Games()
+    public IEnumerable<IGameRoom> Games()
     {
       return GameRooms.Values.ToArray();
     }
 
-    public Task<GameRoom> GetUserRoomAsync(Guid userId)
+    public Task<IGameRoom> GetUserRoomAsync(Guid userId)
     {
       if (GameRooms.TryGetValue(userId, out var room))
       {
         return Task.FromResult(room);
       }
-      return Task.FromResult(default(GameRoom));
+      return Task.FromResult(default(IGameRoom));
     }
 
-    public Task NewRoomAsync(Guid userId)
+    public async Task NewRoomAsync(Guid userId)
     {
+      var character = ActorHelper.New<ICharacters>(userId);
+      var game = await character.CreateRoomAsync();
+      await game.CreateMapAsync();
+      await game.Map.GenerateMobsAsync();
+      GameRooms.TryAdd(userId, game);
       //var game = new GameRoom();
       //game.OwnerId = userId;
       //game.Map = new GameMap();
@@ -46,7 +54,7 @@ namespace IdleWithBlazor.Server.Services
       //  Name = "item",
       //  EquipmentType = Common.Enums.EnumEquipment.Neck
       //});
-      return Task.CompletedTask;
+      //return Task.CompletedTask;
     }
 
     public async Task OnTick(IServiceProvider sp)

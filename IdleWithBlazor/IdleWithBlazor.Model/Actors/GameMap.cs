@@ -1,6 +1,7 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
 
 namespace IdleWithBlazor.Model.Actors
 {
@@ -36,7 +37,7 @@ namespace IdleWithBlazor.Model.Actors
     public IEnumerable<IMonster?> Monsters => monsters ?? Enumerable.Empty<IMonster?>();
 
     private List<IMonster> monsters { get; set; }
-
+    
     private ICharacters? owner { get; set; }
     private ConcurrentDictionary<Guid, ICharacters>? guests { get; set; }
 

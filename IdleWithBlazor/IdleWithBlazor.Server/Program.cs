@@ -3,6 +3,7 @@ using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Common.Jsons.Converters;
 using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
+using IdleWithBlazor.Model.Helpers;
 using IdleWithBlazor.Server.Hubs;
 using IdleWithBlazor.Server.Services;
 using IdleWithBlazor.Server.Services.Items.BlueprintServices;
@@ -11,6 +12,7 @@ using IdleWithBlazor.Server.Tasks;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 
+ModelHelper.InitModel();
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
