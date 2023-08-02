@@ -18,8 +18,7 @@ namespace IdleWithBlazor.Model.Characters
       {
         if (_player == null)
         {
-          _player = ActorHelper.New<IPlayer>();
-          _player.SetPlayerFromCharacter(this);
+          Init();
         }
         return _player;
       }
@@ -31,6 +30,11 @@ namespace IdleWithBlazor.Model.Characters
       ActionSlots.Init(this);
       ActionSlots.SelectSkill(ActorHelper.ActionSkillPool.FirstOrDefault());
       ActionSlots.UpdateActionSlot();
+      if(_player == null)
+      {
+        _player = ActorHelper.New<IPlayer>();
+        _player.SetPlayerFromCharacter(this);
+      }
     }
 
     public async Task<IGameRoom?> CreateRoomAsync()
