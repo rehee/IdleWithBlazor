@@ -8,15 +8,15 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IGameRoom : IActor
   {
-    Task<bool> InitAsync(ICharacters owner);
-    Task<bool> JoinGameAsync(ICharacters guest);
+    Task<bool> InitAsync(ICharacter owner);
+    Task<bool> JoinGameAsync(ICharacter guest);
     Task<bool> KickGuestAsync(Guid guestId);
     Task<bool> CreateMapAsync();
     Task<bool> CloseGameAsync();
 
     Guid? OwnerId { get; }
-    ICharacters? GameOwner { get; }
-    ICharacters[] Guests { get; }
+    ICharacter? GameOwner { get; }
+    ICharacter[] Guests { get; }
     IGameMap? Map { get; }
 
   }

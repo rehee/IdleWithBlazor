@@ -1,8 +1,8 @@
 ﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.DTOs.Actors;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Services;
-using IdleWithBlazor.Model.Actors;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.Json;
 
@@ -11,10 +11,10 @@ namespace IdleWithBlazor.Web.Services
   public class ConnectionService : IConnection
   {
     private readonly IStorageService storage;
-    private readonly IScopedContext<GameRoom> room;
+    private readonly IScopedContext<GameRoomDTO> room;
 
     private HubConnection? hub { get; set; } = null;
-    public ConnectionService(IStorageService storage, IScopedContext<GameRoom> room)
+    public ConnectionService(IStorageService storage, IScopedContext<GameRoomDTO> room)
     {
       this.storage = storage;
       this.room = room;
@@ -60,7 +60,7 @@ namespace IdleWithBlazor.Web.Services
         });
         hub.On<string>("CombatMessage", r =>
         {
-          var obj = JsonSerializer.Deserialize<GameRoom>(r, ConstSetting.Options);
+          var obj = JsonHelper.ToObject<GameRoomDTO>(r);
           room.SetValue(obj);
         });
         await hub.StartAsync();

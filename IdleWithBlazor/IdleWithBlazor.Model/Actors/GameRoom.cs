@@ -16,13 +16,13 @@ namespace IdleWithBlazor.Model.Actors
       }
       set => base.Children = value;
     }
-    public Guid? OwnerId { get; set; }
+    public Guid? OwnerId => GameOwner?.Id;
     [JsonIgnore]
-    public ICharacters? GameOwner { get; private set; }
+    public ICharacter? GameOwner { get; private set; }
 
-    private ConcurrentDictionary<Guid, ICharacters>? guests { get; set; }
+    private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
     [JsonIgnore]
-    public ICharacters[] Guests => guests?.Select(b => b.Value).ToArray() ?? Enumerable.Empty<ICharacters>().ToArray();
+    public ICharacter[] Guests => guests?.Select(b => b.Value).ToArray() ?? Enumerable.Empty<ICharacter>().ToArray();
 
     public IGameMap? Map { get; set; }
 
@@ -64,18 +64,17 @@ namespace IdleWithBlazor.Model.Actors
       return false;
     }
 
-    public Task<bool> InitAsync(ICharacters owner)
+    public Task<bool> InitAsync(ICharacter owner)
     {
       lock (this)
       {
         GameOwner = owner;
-        OwnerId = owner.Id;
-        guests = new ConcurrentDictionary<Guid, ICharacters>();
+        guests = new ConcurrentDictionary<Guid, ICharacter>();
         return Task.FromResult(true);
       }
     }
 
-    public Task<bool> JoinGameAsync(ICharacters guest)
+    public Task<bool> JoinGameAsync(ICharacter guest)
     {
       return Task.FromResult(guests?.TryAdd(guest.Id, guest) ?? false);
     }

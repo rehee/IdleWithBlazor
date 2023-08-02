@@ -11,7 +11,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IGameMap : IActor
   {
-    Task<bool> InitAsync(ICharacters? owner, ConcurrentDictionary<Guid, ICharacters>? guests);
+    Task<bool> InitAsync(ICharacter? owner, ConcurrentDictionary<Guid, ICharacter>? guests);
     Task<bool> GenerateMobsAsync();
     Task<bool> CloseMapAsync();
 

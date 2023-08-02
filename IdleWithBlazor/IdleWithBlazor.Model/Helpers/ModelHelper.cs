@@ -19,7 +19,7 @@ namespace IdleWithBlazor.Model.Helpers
     {
       ActorHelper.AddMapper<IGameRoom, GameRoom>();
       ActorHelper.AddMapper<IGameMap, GameMap>();
-      ActorHelper.AddMapper<ICharacters, Character>();
+      ActorHelper.AddMapper<ICharacter, Character>();
       ActorHelper.AddMapper<IPlayer, Player>();
       ActorHelper.AddMapper<IMonster, Monster>();
       ActorHelper.AddMapper<IEquiptor, Equiptor>();

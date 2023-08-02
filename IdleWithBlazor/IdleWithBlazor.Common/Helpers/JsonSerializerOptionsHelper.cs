@@ -41,7 +41,7 @@ namespace IdleWithBlazor.Common.Helpers
       option.Converters.Add(new ITypedJsonConverter<IGameRoom>());
       option.Converters.Add(new ITypedJsonConverter<IPlayer>());
       option.Converters.Add(new ITypedJsonConverter<ISprite>());
-      option.Converters.Add(new ITypedJsonConverter<ICharacters>());
+      option.Converters.Add(new ITypedJsonConverter<ICharacter>());
       option.Converters.Add(new ITypedJsonConverter<IEquiptor>());
       option.Converters.Add(new ITypedJsonConverter<IActionSkill>());
       option.Converters.Add(new ITypedJsonConverter<IActionSlot>());

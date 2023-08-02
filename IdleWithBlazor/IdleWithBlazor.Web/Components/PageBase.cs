@@ -1,8 +1,7 @@
-﻿using IdleWithBlazor.Common.Services;
-using IdleWithBlazor.Model.Actors;
+﻿using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace IdleWithBlazor.Web.Components
 {
@@ -15,7 +14,7 @@ namespace IdleWithBlazor.Web.Components
     [Inject]
     protected IConnection connection { get; set; }
     [Inject]
-    public IScopedContext<GameRoom> Room { get; protected set; }
+    public IScopedContext<GameRoomDTO> Room { get; protected set; }
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();

@@ -1,7 +1,6 @@
 ﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.DTOs.Actors;
 using IdleWithBlazor.Common.Enums;
-using IdleWithBlazor.Common.Interfaces.Actors;
-using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Web.Components;
 using System.Text.Json;
 
@@ -10,7 +9,7 @@ namespace IdleWithBlazor.Web.Pages
   public class CombatPage : PageBase
   {
     public int Count { get; set; }
-    public IEnumerable<IMonster> Mobs => Room?.Value?.Map?.Monsters?.Where(b => b != null).Select(b => b) ?? Enumerable.Empty<IMonster>();
+    public IEnumerable<MonsterDTO> Mobs => Room?.Value?.GameMap?.Monsters ?? Enumerable.Empty<MonsterDTO>();
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
       await base.OnAfterRenderAsync(firstRender);
@@ -21,7 +20,7 @@ namespace IdleWithBlazor.Web.Pages
       }
     }
 
-    private void Room_ValueChange(object? sender, Common.Events.ContextScopeEventArgs<Model.Actors.GameRoom> e)
+    private void Room_ValueChange(object? sender, Common.Events.ContextScopeEventArgs<GameRoomDTO> e)
     {
       Count++;
       Console.WriteLine(JsonSerializer.Serialize(Room?.Value, ConstSetting.Options));

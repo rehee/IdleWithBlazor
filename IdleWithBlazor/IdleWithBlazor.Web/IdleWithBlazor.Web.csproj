@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdleWithBlazor.Common\IdleWithBlazor.Common.csproj" />
-    <ProjectReference Include="..\IdleWithBlazor.Model\IdleWithBlazor.Model.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface ICharacters : IActor
+  public interface ICharacter : IActor
   {
     Task<IGameRoom?> CreateRoomAsync();
     Task<bool> JoinGameAsync(IGameRoom gameId);

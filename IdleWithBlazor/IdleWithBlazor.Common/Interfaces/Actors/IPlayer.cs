@@ -9,7 +9,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IPlayer : ISprite
   {
-    void SetPlayerFromCharacter(ICharacters character);
+    void SetPlayerFromCharacter(ICharacter character);
    
   }
 }

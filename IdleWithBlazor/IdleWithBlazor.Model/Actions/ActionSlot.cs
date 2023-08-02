@@ -22,7 +22,7 @@ namespace IdleWithBlazor.Model.Actions
 
     public decimal AttackSpeed { get; set; }
 
-    public void Init(ICharacters owner)
+    public void Init(ICharacter owner)
     {
       SetParent(owner);
     }

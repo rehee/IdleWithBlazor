@@ -14,16 +14,16 @@ namespace IdleWithBlazor.Test.Actors
     [Test]
     public async Task Character_Create_Game_HappyPath_Test()
     {
-      var c1 = ActorHelper.New<ICharacters>();
+      var c1 = ActorHelper.New<ICharacter>();
       var room = await c1.CreateRoomAsync();
 
       Assert.That(c1.Id, Is.EqualTo(room.OwnerId));
 
-      var c2 = ActorHelper.New<ICharacters>();
+      var c2 = ActorHelper.New<ICharacter>();
       await c2.JoinGameAsync(room);
 
 
-      var c3 = ActorHelper.New<ICharacters>();
+      var c3 = ActorHelper.New<ICharacter>();
       await c3.JoinGameAsync(room);
 
       Assert.That(room.Guests.Count, Is.EqualTo(2));
@@ -34,7 +34,7 @@ namespace IdleWithBlazor.Test.Actors
 
       Assert.That(room.Map.Players.Count(), Is.EqualTo(3));
 
-      var c4 = ActorHelper.New<ICharacters>();
+      var c4 = ActorHelper.New<ICharacter>();
       await c4.JoinGameAsync(room);
       Assert.That(room.Map.Players.Count(), Is.EqualTo(4));
 
@@ -55,7 +55,7 @@ namespace IdleWithBlazor.Test.Actors
     [Test]
     public async Task Character_Player_Test()
     {
-      var c1 = ActorHelper.New<ICharacters>();
+      var c1 = ActorHelper.New<ICharacter>();
       c1.Id = Guid.NewGuid();
       var player = c1.ThisPlayer;
       Assert.That(player.Id, Is.EqualTo(c1.Id));
@@ -65,7 +65,7 @@ namespace IdleWithBlazor.Test.Actors
     [Test]
     public async Task Character_Create_Game_HappyPath_WithSkill_Test()
     {
-      var c1 = ActorHelper.New<ICharacters>();
+      var c1 = ActorHelper.New<ICharacter>();
       c1.Init();
       var room = await c1.CreateRoomAsync();
       await room.CreateMapAsync();

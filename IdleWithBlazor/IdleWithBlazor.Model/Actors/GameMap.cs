@@ -38,8 +38,8 @@ namespace IdleWithBlazor.Model.Actors
 
     private List<IMonster> monsters { get; set; }
     
-    private ICharacters? owner { get; set; }
-    private ConcurrentDictionary<Guid, ICharacters>? guests { get; set; }
+    private ICharacter? owner { get; set; }
+    private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
 
     public async Task<bool> CloseMapAsync()
     {
@@ -60,6 +60,7 @@ namespace IdleWithBlazor.Model.Actors
         monsters.Clear();
         var m = ActorHelper.New<IMonster>();
         m.CurrentHp = 100;
+        m.MaxHp = 100;
         if (m != null)
         {
           monsters.Add(m);
@@ -68,7 +69,7 @@ namespace IdleWithBlazor.Model.Actors
       return Task.FromResult(true);
     }
 
-    public Task<bool> InitAsync(ICharacters? owner, ConcurrentDictionary<Guid, ICharacters>? guests)
+    public Task<bool> InitAsync(ICharacter? owner, ConcurrentDictionary<Guid, ICharacter>? guests)
     {
       this.owner = owner;
       this.guests = guests;

@@ -6,7 +6,7 @@ using IdleWithBlazor.Model.Actors;
 
 namespace IdleWithBlazor.Model.Characters
 {
-  public class Character : Actor, ICharacters
+  public class Character : Actor, ICharacter
   {
     public override Type TypeDiscriminator => typeof(Character);
 

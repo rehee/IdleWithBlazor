@@ -70,11 +70,11 @@ namespace IdleWithBlazor.Server.Services
 
             try
             {
-              combatJson = JsonSerializer.Serialize(q.Geme, ConstSetting.Options);
+              combatJson = JsonSerializer.Serialize(q.Geme.ToDTO(), ConstSetting.Options);
             }
             catch (Exception ex)
             {
-              var a = ex;
+              Console.WriteLine(ex);
             }
             return q.Client.SendAsync("CombatMessage", combatJson);
           default:

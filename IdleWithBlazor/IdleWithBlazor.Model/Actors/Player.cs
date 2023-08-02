@@ -17,7 +17,7 @@ namespace IdleWithBlazor.Model.Actors
       throw new NotImplementedException();
     }
 
-    public void SetPlayerFromCharacter(ICharacters character)
+    public void SetPlayerFromCharacter(ICharacter character)
     {
       this.Id = character.Id;
       this.Name = character.Name;
