@@ -1,5 +1,8 @@
-﻿using IdleWithBlazor.Common.Helpers;
+﻿using IdleWithBlazor.Common.DTOs;
+using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.GameActions;
+using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Model.Characters;
 using System;
@@ -20,6 +23,31 @@ namespace IdleWithBlazor.Model.Helpers
       ActorHelper.AddMapper<IPlayer, Player>();
       ActorHelper.AddMapper<IMonster, Monster>();
       ActorHelper.AddMapper<IEquiptor, Equiptor>();
+      ActorHelper.AddMapper<IActionSkill, ActionSkill>();
+
+      ActorHelper.UpdateActionPool(
+       ActionsDtos.Select(b => new ActionSkill(b)).ToArray()
+        );
     }
+
+    public static ActionSkillInfoDTO[] ActionsDtos = new ActionSkillInfoDTO[]
+    {
+      new ActionSkillInfoDTO
+      {
+        Id = Guid.NewGuid(),
+        Name = "攻击",
+        DamageRate=1,
+        AttackSpeedRate = 1,
+        CoolDown=0,
+      },
+      new ActionSkillInfoDTO
+      {
+        Id = Guid.NewGuid(),
+        Name = "英勇打击",
+        DamageRate=1.5m,
+        AttackSpeedRate = 1,
+        CoolDown=3,
+      },
+    };
   }
 }

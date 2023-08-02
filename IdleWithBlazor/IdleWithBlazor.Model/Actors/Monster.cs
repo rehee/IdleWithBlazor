@@ -1,9 +1,5 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IdleWithBlazor.Common.Interfaces.GameActions;
 
 namespace IdleWithBlazor.Model.Actors
 {
@@ -11,5 +7,11 @@ namespace IdleWithBlazor.Model.Actors
   {
     public override Type TypeDiscriminator => typeof(Monster);
 
+    IActionSkill[]? ISprite.ActionSkills => throw new NotImplementedException();
+
+    public void SetActions(IActionSkill[]? skills)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

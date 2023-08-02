@@ -1,4 +1,4 @@
-﻿using IdleWithBlazor.Model.Actions;
+﻿using IdleWithBlazor.Common.Interfaces.GameActions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,10 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
   {
     BigInteger MaxHp { get; set; }
     BigInteger CurrentHp { get; set; }
+    int MinAttack { get; set; }
+    int MaxAttack { get; set; }
+    IActionSlot? ActionSlots { get; }
+
     IActionSkill[]? ActionSkills { get; }
     void SetActions(IActionSkill[]? skills);
   }

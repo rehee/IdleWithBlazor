@@ -1,6 +1,5 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
-using IdleWithBlazor.Common.Interfaces.Items;
 using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Model.Actors
@@ -72,6 +71,21 @@ namespace IdleWithBlazor.Model.Actors
       this.owner = owner;
       this.guests = guests;
       return Task.FromResult(true);
+    }
+
+    public override async Task<bool> OnTick(IServiceProvider sp)
+    {
+      var baseResult = await base.OnTick(sp);
+      var monster = Monsters;
+      foreach (var player in Players.Where(b => b != null).ToArray())
+      {
+        if (player.ActionSlots == null || player.ActionSlots.ActionSkill == null)
+        {
+          continue;
+        }
+        await player.ActionSlots.ActionSkill.Attack(player, monster.Where(b => b != null));
+      }
+      return baseResult;
     }
   }
 }

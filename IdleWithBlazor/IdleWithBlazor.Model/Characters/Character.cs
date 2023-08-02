@@ -1,14 +1,8 @@
-﻿using IdleWithBlazor.Common.Enums;
-using IdleWithBlazor.Common.Helpers;
+﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.GameActions;
 using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Characters
 {
@@ -29,6 +23,14 @@ namespace IdleWithBlazor.Model.Characters
         }
         return _player;
       }
+    }
+
+    public void Init()
+    {
+      ActionSlots = ActorHelper.New<IActionSlot>();
+      ActionSlots.Init(this);
+      ActionSlots.SelectSkill(ActorHelper.ActionSkillPool.FirstOrDefault());
+      ActionSlots.UpdateActionSlot();
     }
 
     public async Task<IGameRoom?> CreateRoomAsync()
@@ -91,11 +93,13 @@ namespace IdleWithBlazor.Model.Characters
 
     public Equiptor Inventory { get; set; }
 
+    public IActionSlot ActionSlots { get; set; }
+
     public Task<bool> UpdatePlayerAsync()
     {
       ThisPlayer.MaxHp = 10;
       ThisPlayer.CurrentHp = ThisPlayer.MaxHp;
-      
+
       return Task.FromResult(true);
     }
 

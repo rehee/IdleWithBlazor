@@ -1,15 +1,9 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.GameActions;
 using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Common.Jsons.Converters;
-using IdleWithBlazor.Model.Actions;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Helpers
 {
@@ -50,7 +44,8 @@ namespace IdleWithBlazor.Common.Helpers
       option.Converters.Add(new ITypedJsonConverter<ICharacters>());
       option.Converters.Add(new ITypedJsonConverter<IEquiptor>());
       option.Converters.Add(new ITypedJsonConverter<IActionSkill>());
-      
+      option.Converters.Add(new ITypedJsonConverter<IActionSlot>());
+
     }
   }
 }

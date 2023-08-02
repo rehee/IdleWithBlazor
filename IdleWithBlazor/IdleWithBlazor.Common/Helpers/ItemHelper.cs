@@ -86,16 +86,18 @@ namespace IdleWithBlazor.Common.Helpers
 
     public static double GetRandomPercentage(int? min = null, int? max = null)
     {
-      var random = GetNewRandom();
-      var range = random.Next(min ?? MinimumRandom, max ?? MaximumRandom);
-      var result = range / 100d;
+      var result = GetRandomBetween(min ?? MinimumRandom, max ?? MaximumRandom) / 100d;
       if (result > 1)
       {
         var a = 1;
       }
       return result;
     }
-
+    public static int GetRandomBetween(int min, int max)
+    {
+      var random = GetNewRandom();
+      return random.Next(min, max);
+    }
     public static Random GetNewRandom()
     {
       return new Random(ConvertGuidToInt(Guid.NewGuid()));
@@ -112,6 +114,25 @@ namespace IdleWithBlazor.Common.Helpers
       }
     }
 
-
+    public static IEnumerable<T> RandomEnumerable<T>(this IEnumerable<T> input)
+    {
+      if (input?.Any() != true)
+      {
+        return input;
+      }
+      var length = input.Count();
+      var random = GetNewRandom();
+      return input.Select(b => (random.Next(length), b)).OrderBy(b => b.Item1).Select(b => b.b);
+    }
+    public static List<T> RandomList<T>(this List<T> input, int? count = null)
+    {
+      if (input?.Any() != true)
+      {
+        return input;
+      }
+      var length = count ?? input.Count();
+      var random = GetNewRandom();
+      return input.Select(b => (random.Next(length), b)).OrderBy(b => b.Item1).Select(b => b.b).ToList();
+    }
   }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Model.Actions
 {
-  public class Attack : ActionSkill
+  public class Attack : ActionSkillAbs
   {
     public override Type TypeDiscriminator => typeof(Attack);
     public override Decimal CoolDown { get; set; }

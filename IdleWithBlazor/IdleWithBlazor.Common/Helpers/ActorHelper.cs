@@ -1,5 +1,5 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
-using IdleWithBlazor.Model.Actions;
+using IdleWithBlazor.Common.Interfaces.GameActions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace IdleWithBlazor.Common.Helpers
       mapper.TryAdd(typeof(T), typeof(K));
     }
 
-    public static T? New<T>(Guid? id = null, string? name = null) where T : IActor
+    public static T New<T>(Guid? id = null, string? name = null) where T : IActor
     {
       if (mapper.TryGetValue(typeof(T), out var type) && type != null)
       {
@@ -32,9 +32,11 @@ namespace IdleWithBlazor.Common.Helpers
       return default(T?);
     }
 
-    public static IEnumerable<IActionSkill> ActionSkillPool()
+    private static List<IActionSkill> actionSkillPool = new List<IActionSkill>();
+    public static void UpdateActionPool(params IActionSkill[] actions)
     {
-
+      actionSkillPool.AddRange(actions);
     }
+    public static IEnumerable<IActionSkill> ActionSkillPool => actionSkillPool;
   }
 }

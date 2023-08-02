@@ -4,13 +4,12 @@ using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.Items;
-using IdleWithBlazor.Model.GameItems.Items.Equipments;
 using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Server.Services.Items.BlueprintServices
 {
-    public class BlueprintService : IBluePrintService
-  {
+  public class BlueprintService : IBluePrintService
+    {
     private static ConcurrentDictionary<string, IBluePrint> mapper = new ConcurrentDictionary<string, IBluePrint>();
     public Task<bool> AddBluePrint(IBluePrint bluePrint, CancellationToken cancellationToken = default)
     {

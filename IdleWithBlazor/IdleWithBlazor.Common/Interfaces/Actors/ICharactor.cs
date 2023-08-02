@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IdleWithBlazor.Common.Interfaces.GameActions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
     Task<bool> KickPlayerAsync(Guid playerId);
     Task<bool> LeaveGameAsync();
     Task<bool> UpdatePlayerAsync();
+
+    IActionSlot? ActionSlots { get; }
 
     IGameRoom? Room { get; }
     IPlayer ThisPlayer { get; }
