@@ -1,0 +1,21 @@
+version: "3.4"
+
+services:
+  blazorweb:
+    depends_on:
+      - idelserver
+    image: web:0.1
+    ports:
+      - "5001:8080"
+    networks:
+      - my_network
+  idelserver:
+    container_name: idelserver_c
+    ports:
+      - "5002:80"
+    image: server:0.1
+    networks:
+      - my_network
+networks:
+  my_network: # 定义一个名为'my_network'的自定义网络
+    driver: bridge

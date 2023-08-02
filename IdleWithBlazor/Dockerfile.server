@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+# COPY ["TaskLane.Web/TaskLane.Web.csproj", "TaskLane.Web/"]
+# RUN dotnet restore "TaskLane.Web/TaskLane.Web.csproj"
+COPY . .
+WORKDIR "/src/IdleWithBlazor.Server"
+RUN dotnet build "IdleWithBlazor.Server.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "IdleWithBlazor.Server.csproj" -c Release -o /app/publish
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "IdleWithBlazor.Server.dll"]

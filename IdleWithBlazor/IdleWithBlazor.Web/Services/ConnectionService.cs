@@ -46,7 +46,7 @@ namespace IdleWithBlazor.Web.Services
         return false;
       }
       hub = new HubConnectionBuilder()
-       .WithUrl("https://localhost:7026/myhub", options =>
+       .WithUrl("http://localhost:5002/myhub", options =>
        {
          options.AccessTokenProvider = () => Task.FromResult<string?>(token);
        })

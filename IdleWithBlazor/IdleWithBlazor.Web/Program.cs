@@ -1,12 +1,19 @@
 using Blazored.LocalStorage;
 using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Web;
+using IdleWithBlazor.Web.Models;
 using IdleWithBlazor.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+var e = builder.HostEnvironment.Environment;
+var add = builder.HostEnvironment.BaseAddress;
+object value = builder.Configuration.AddEnvironmentVariables();
+var set = builder.Configuration["Setting_SettingUrl"];
+Console.WriteLine($"{add}_{e}");
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
