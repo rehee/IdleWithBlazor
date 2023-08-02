@@ -58,6 +58,7 @@ namespace IdleWithBlazor.Model.Actors
         }
         monsters.Clear();
         var m = ActorHelper.New<IMonster>();
+        m.CurrentHp = 100;
         if (m != null)
         {
           monsters.Add(m);
@@ -79,7 +80,7 @@ namespace IdleWithBlazor.Model.Actors
       var monster = Monsters;
       foreach (var player in Players.Where(b => b != null).ToArray())
       {
-        if (player.ActionSlots == null || player.ActionSlots.ActionSkill == null)
+        if (player.ActionSlots == null || player.ActionSlots.ActionSkill == null || player.ActionSlots.CurrentTick != true)
         {
           continue;
         }

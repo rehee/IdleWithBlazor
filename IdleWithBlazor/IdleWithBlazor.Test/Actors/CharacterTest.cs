@@ -3,6 +3,7 @@ using IdleWithBlazor.Common.Interfaces.Actors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +60,26 @@ namespace IdleWithBlazor.Test.Actors
       var player = c1.ThisPlayer;
       Assert.That(player.Id, Is.EqualTo(c1.Id));
       await c1.UpdatePlayerAsync();
+    }
+
+    [Test]
+    public async Task Character_Create_Game_HappyPath_WithSkill_Test()
+    {
+      var c1 = ActorHelper.New<ICharacters>();
+      c1.Init();
+      var room = await c1.CreateRoomAsync();
+      await room.CreateMapAsync();
+      await room.Map.GenerateMobsAsync();
+      for (var i = 0; i < 11; i++)
+      {
+        await room.OnTick(default(IServiceProvider));
+      }
+      Assert.That(room.Map.Monsters.FirstOrDefault().CurrentHp, Is.EqualTo(new BigInteger(99)));
+      for (var i = 0; i < 11; i++)
+      {
+        await room.OnTick(default(IServiceProvider));
+      }
+      Assert.That(room.Map.Monsters.FirstOrDefault().CurrentHp, Is.EqualTo(new BigInteger(98)));
     }
   }
 }

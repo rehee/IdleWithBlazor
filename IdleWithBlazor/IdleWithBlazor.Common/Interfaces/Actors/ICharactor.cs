@@ -19,6 +19,6 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 
     IGameRoom? Room { get; }
     IPlayer ThisPlayer { get; }
-
+    void Init();
   }
 }

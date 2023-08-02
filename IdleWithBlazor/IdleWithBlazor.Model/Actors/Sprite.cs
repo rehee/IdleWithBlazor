@@ -33,16 +33,13 @@ namespace IdleWithBlazor.Model.Actors
 
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
-      if (ActionSkills?.Any() == true)
+      if (ActionSlots == null)
       {
-        if (ActionSlots == null)
-        {
-          return false;
-        }
-
-        return (await Task.WhenAll(ActionSlots.OnTick(sp))).All(b => b == true);
+        return false;
       }
-      return await base.OnTick(sp);
+
+      return (await Task.WhenAll(ActionSlots.OnTick(sp))).All(b => b == true);
+      //return await base.OnTick(sp);
 
     }
     //(

@@ -34,7 +34,7 @@ namespace IdleWithBlazor.Model.Actions
 
     public void UpdateActionSlot()
     {
-      if (ActionSkill != null)
+      if (ActionSkill == null)
       {
         AttackSpeed = 0;
         CoolDownTick = null;
@@ -59,6 +59,7 @@ namespace IdleWithBlazor.Model.Actions
         CurrentTick = true;
         return Task.FromResult(true);
       }
+      CoolDownTickRemain--;
       return Task.FromResult(false);
     }
 
