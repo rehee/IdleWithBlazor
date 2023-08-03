@@ -128,6 +128,12 @@ namespace IdleWithBlazor.Model.Actors
           foreach (var m in killedMonster)
           {
             var exp = ExpHelper.GetMonsterExp(m.Level);
+
+            var itemDrop = await TemplateHelper.GetRamdonDrop(this, m);
+            if (itemDrop != null)
+            {
+              await owner?.PickItemAsync(itemDrop);
+            }
             await owner.GainCurrency(exp);
             await Task.WhenAll(guests().Select(b => b.GainCurrency(exp)));
           }

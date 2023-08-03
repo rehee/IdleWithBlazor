@@ -42,7 +42,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
       {
         count++;
       }
-      Assert.That(inventory.InventoryList.Count, Is.EqualTo(count));
+      Assert.That(inventory.Items().Count, Is.EqualTo(count));
       var result = await inventory.PickItemAsync(item2);
 
       Assert.That(result, Is.EqualTo(expectPicked));
@@ -50,7 +50,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
       {
         count++;
       }
-      Assert.That(inventory.InventoryList.Count, Is.EqualTo(count));
+      Assert.That(inventory.Items().Count, Is.EqualTo(count));
     }
     [TestCase(1, 10, 1, true)]
     [TestCase(2, 0, 1, false)]
@@ -69,7 +69,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
         await inventory.PickItemAsync(items[i]);
         count++;
       }
-      Assert.That(count, Is.EqualTo(inventory.InventoryList?.Count()));
+      Assert.That(count, Is.EqualTo(inventory.Items().Count()));
       var item = itemIndex >= items.Length ? null : items[itemIndex];
       if (item == null)
       {
@@ -77,7 +77,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
       }
       var pick = await inventory.TakeOutItemAsync(item.Id);
       Assert.IsTrue((item.Id == pick?.Id) == expectPicked);
-      Assert.That(count, Is.EqualTo(inventory.InventoryList?.Count()));
+      Assert.That(count, Is.EqualTo(inventory.Items().Count()));
     }
     [TestCase(1, 10, 1, true)]
     [TestCase(2, 0, 1, false)]
@@ -96,7 +96,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
         await inventory.PickItemAsync(items[i]);
         count++;
       }
-      Assert.That(count, Is.EqualTo(inventory.InventoryList?.Count()));
+      Assert.That(count, Is.EqualTo(inventory.Items().Count()));
       var item = itemIndex >= items.Length ? null : items[itemIndex];
       if (item == null)
       {
@@ -108,7 +108,7 @@ namespace IdleWithBlazor.Test.Items.IInventoryTests
       {
         count--;
       }
-      Assert.That(count, Is.EqualTo(inventory.InventoryList?.Count()));
+      Assert.That(count, Is.EqualTo(inventory.Items().Count()));
     }
   }
 }

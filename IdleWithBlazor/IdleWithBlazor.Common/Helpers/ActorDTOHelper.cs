@@ -1,6 +1,9 @@
 ﻿using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.Inventories;
+using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.GameActions;
+using IdleWithBlazor.Common.Interfaces.Items;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -98,6 +101,38 @@ namespace IdleWithBlazor.Common.Helpers
       {
         dto.Guests = input.Guests().Select(x => x.ToDTO<CharacterDTO>()) ?? null;
       });
+      AddDTOMapper<ICharacter, InventoryDTO>((input, dto) =>
+      {
+        dto.Items = input.Items().Select(x => x.ToDTO<GameItemDTO>()).ToArray();
+        dto.Equiptor = input.ToDTO<EquiptorDTO>();
+      });
+      AddDTOMapper<IGameItem, GameItemDTO>((input, dto) =>
+      {
+        dto.Type = input.ItemType;
+        if (input is IEquipment equipment)
+        {
+          dto.EquipType = equipment.EquipmentType;
+        }
+      });
+      AddDTOMapper<ICharacter, EquiptorDTO>((input, dto) =>
+      {
+        dto.Equpments = new Dictionary<Enums.EnumEquipmentSlot, EquipmentDTO>();
+        var itemsEquiped = input.Equiptor.Equipments().ToArray();
+        foreach (EnumEquipmentSlot value in Enum.GetValues(typeof(EnumEquipmentSlot)))
+        {
+          dto.Equpments.TryAdd(
+            value,
+            itemsEquiped.Where(b => b.slot == value && b.equipment != null).Select(b => new EquipmentDTO
+            {
+              Id = b.equipment.Id,
+              Name = b.equipment.Name,
+              EquipType = b.equipment.EquipmentType,
+              Type = EnumItemType.Equipment,
+            }).FirstOrDefault());
+        }
+        itemsEquiped = null;
+      });
+
     }
 
 

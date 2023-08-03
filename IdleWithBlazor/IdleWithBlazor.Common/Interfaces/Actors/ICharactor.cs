@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface ICharacter : IActor, ILevelupable
+  public interface ICharacter : IActor, ILevelupable, IInventory
   {
     Task<IGameRoom?> CreateRoomAsync();
     Task<bool> JoinGameAsync(IGameRoom gameId);
@@ -19,7 +19,9 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
     Task<bool> GainCurrency(int exp);
 
     ConcurrentDictionary<int, IActionSlot>? ActionSlots { get; }
-    
+    IEquiptor Equiptor { get; }
+
+
 
 
     IGameRoom? Room { get; }

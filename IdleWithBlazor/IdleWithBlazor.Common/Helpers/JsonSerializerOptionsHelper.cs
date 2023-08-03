@@ -35,7 +35,7 @@ namespace IdleWithBlazor.Common.Helpers
       option.Converters.Add(new BigIntegerJsonConverter());
       option.Converters.Add(new TypeJsonConverter());
       option.Converters.Add(new JsonStringEnumConverter());
-      option.Converters.Add(new ActionJsonConverter());
+      option.AddITypedJsonConvert<IActor>();
       option.AddITypedJsonConvert<IGameItem>();
       option.AddITypedJsonConvert<IEquipment>();
       option.AddITypedJsonConvert<IGameMap>();

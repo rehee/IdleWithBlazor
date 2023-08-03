@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.DTOs;
+using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.GameActions;
@@ -7,6 +8,7 @@ using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Model.Characters;
 using IdleWithBlazor.Model.GameItems.Inventories;
+using IdleWithBlazor.Model.GameItems.Templates.Equipments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +45,14 @@ namespace IdleWithBlazor.Model.Helpers
        ActionsDtos.Select(b => new ActionSkill(b)).ToArray()
         );
     }
+
+    public static ITemplate[] ITemplatePool = new ITemplate[]
+    {
+      new EquipmentTemplate(EnumEquipment.Body,"body_Aromor"),
+      new EquipmentTemplate(EnumEquipment.OneHand,"On_Hand_Sword"),
+      new EquipmentTemplate(EnumEquipment.Waist,"waist_Aromor"),
+      new EquipmentTemplate(EnumEquipment.Foot,"foot_Aromor"),
+    };
 
     public static ActionSkillInfoDTO[] ActionsDtos = new ActionSkillInfoDTO[]
     {

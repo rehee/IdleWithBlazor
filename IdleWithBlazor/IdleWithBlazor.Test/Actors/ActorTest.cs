@@ -20,7 +20,7 @@ namespace IdleWithBlazor.Test.Actors
 
       };
       option.Converters.Add(new TypeJsonConverter());
-      option.Converters.Add(new ActionJsonConverter());
+      option.Converters.Add(new ITypedJsonConverter<IActor>());
       var json = JsonSerializer.Serialize(actorList, option);
       var obj = JsonSerializer.Deserialize<IActor[]>(json, option);
 

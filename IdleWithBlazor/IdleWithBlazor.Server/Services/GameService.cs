@@ -13,7 +13,7 @@ namespace IdleWithBlazor.Server.Services
 
 
     public static ConcurrentDictionary<Guid, IGameRoom> GameRooms { get; set; } = new ConcurrentDictionary<Guid, IGameRoom>();
-
+    public static ConcurrentDictionary<Guid, ICharacter> Characters { get; set; } = new ConcurrentDictionary<Guid, ICharacter>();
     public IEnumerable<IGameRoom> Games()
     {
       foreach (var room in GameRooms.Values)

@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -15,6 +16,9 @@ namespace IdleWithBlazor.Web.Components
     protected IConnection connection { get; set; }
     [Inject]
     public IScopedContext<GameRoomDTO> Room { get; protected set; }
+    [Inject]
+    public IScopedContext<InventoryDTO> Inventory { get; protected set; }
+
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();
@@ -40,7 +44,7 @@ namespace IdleWithBlazor.Web.Components
         return;
       }
       IsDisposed = true;
-      GC.SuppressFinalize(this);
+      
     }
 
   }

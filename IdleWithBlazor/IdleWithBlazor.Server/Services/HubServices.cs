@@ -1,8 +1,10 @@
 ﻿using IdleWithBlazor.Common.Consts;
 using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -68,7 +70,6 @@ namespace IdleWithBlazor.Server.Services
         {
           case EnumUserPage.Combat:
             string combatJson = null;
-
             try
             {
               var dto = q.Geme.ToDTO<GameRoomDTO>();
@@ -80,6 +81,20 @@ namespace IdleWithBlazor.Server.Services
               Console.WriteLine(ex);
             }
             return q.Client.SendAsync("CombatMessage", combatJson);
+          case EnumUserPage.Backpack:
+            string inventoryJson = null;
+            try
+            {
+              var dto = q.Geme.GameOwner.ToDTO<InventoryDTO>();
+              inventoryJson = JsonHelper.ToJson(dto);
+              dto = null;
+            }
+            catch (Exception ex)
+            {
+              Console.WriteLine(ex);
+            }
+            return q.Client.SendAsync("BackPackMessage", inventoryJson);
+
           default:
             return Task.CompletedTask;
         }
@@ -110,5 +125,105 @@ namespace IdleWithBlazor.Server.Services
       return ValueTask.CompletedTask;
     }
 
+    public async Task<bool> EquipOrUnequip(string connectionId, Guid? id, int? offset, EnumEquipmentSlot? slot)
+    {
+      var userIdFound = ConnectionIdUserMap.TryGetValue(connectionId, out var userId);
+      if (!userIdFound || userId == null)
+      {
+        return false;
+      }
+      var users = GameService.GameRooms.Values.Where(b => b.OwnerId == userId).Select(b => b.GameOwner).FirstOrDefault();
+      if (users == null)
+      {
+        return false;
+      }
+      if (slot.HasValue)
+      {
+        var unEquiped = users.Equiptor.UnEquip(slot.Value);
+        foreach (var e in unEquiped)
+        {
+          await users.PickItemAsync(e);
+        }
+      }
+      else if (id.HasValue)
+      {
+        var itemPick = await users.TakeOutItemAsync(id.Value);
+        if (itemPick != null && itemPick is IEquipment equipPick)
+        {
+          IEnumerable<IEquipment?> takeoffs = Enumerable.Empty<IEquipment?>();
+          switch (equipPick.EquipmentType)
+          {
+            case EnumEquipment.Head:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Head);
+              break;
+            case EnumEquipment.Neck:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Neck);
+              break;
+            case EnumEquipment.Shoulder:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Shoulder);
+              break;
+            case EnumEquipment.Body:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Body);
+              break;
+            case EnumEquipment.Hand:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Hand);
+              break;
+            case EnumEquipment.Finger:
+              if (offset == 1)
+              {
+                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Rightinger);
+              }
+              else
+              {
+                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.LeftFinger);
+              }
+
+              break;
+            case EnumEquipment.Waist:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Waist);
+              break;
+            case EnumEquipment.Wrist:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Wrist);
+              break;
+            case EnumEquipment.Leg:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Leg);
+              break;
+            case EnumEquipment.Foot:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Foot);
+              break;
+            case EnumEquipment.MainHand:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.MainHand);
+              break;
+            case EnumEquipment.OffHand:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand);
+              break;
+            case EnumEquipment.OneHand:
+              if (offset == 1)
+              {
+                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand);
+              }
+              else
+              {
+                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.MainHand);
+              }
+              break;
+            case EnumEquipment.TwoHands:
+              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand, EnumEquipmentSlot.MainHand);
+              break;
+          }
+          foreach (var item in takeoffs)
+          {
+            await users.PickItemAsync(item);
+          }
+          if (users.Equiptor.Equip(equipPick, offset))
+          {
+            await users.DestoryItemAsync(equipPick.Id);
+          }
+
+          takeoffs = null;
+        }
+      }
+      return true;
+    }
   }
 }

@@ -11,6 +11,7 @@ using IdleWithBlazor.Server.Services.Items.ItemServices;
 using IdleWithBlazor.Server.Tasks;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
+using IdleWithBlazor.Server.Helpers;
 
 ModelHelper.InitModel();
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ builder.Services.AddScoped<IHubServices, HubServices>(sp =>
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
 builder.Services.AddSingleton<IItemService, ItemService>();
 builder.Services.AddSingleton<IGameService, GameService>();
-
+ServiceInitcs.AddSingleTemplate();
 builder.Services.AddHostedService<GameTask>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(o =>

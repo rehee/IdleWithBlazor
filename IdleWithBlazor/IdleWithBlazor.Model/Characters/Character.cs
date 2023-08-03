@@ -34,7 +34,7 @@ namespace IdleWithBlazor.Model.Characters
       {
         var skillSlot = ActorHelper.New<IActionSlot>();
         skillSlot.Init(this, skill);
-        
+
         ActionSlots.TryAdd(actionIndex, skillSlot);
         actionIndex++;
       }
@@ -47,6 +47,11 @@ namespace IdleWithBlazor.Model.Characters
         _player = ActorHelper.New<IPlayer>();
         _player.SetPlayerFromCharacter(this);
       }
+      this.inventory = ActorHelper.New<IInventory>();
+      this.inventory.Init(this);
+
+      Equiptor = ActorHelper.New<IEquiptor>();
+      Equiptor.Init(this);
     }
 
     public async Task<IGameRoom?> CreateRoomAsync()
@@ -135,8 +140,37 @@ namespace IdleWithBlazor.Model.Characters
       BaseAttack = 1 + Level;
       return UpdatePlayerAsync();
     }
+    public IEquiptor Equiptor { get; set; }
+    private IInventory inventory { get; set; }
+    public IEnumerable<IGameItem>? Items()
+    {
+      foreach (var item in inventory.Items())
+      {
+        yield return item;
+      }
+    }
 
+    public Task<bool> PickItemAsync(IGameItem? item)
+    {
+      return inventory.PickItemAsync(item);
+    }
 
+    public Task<IGameItem?> TakeOutItemAsync(Guid itemId)
+    {
+      return inventory.TakeOutItemAsync(itemId);
+    }
 
+    public Task<bool> DestoryItemAsync(Guid itemId)
+    {
+      return inventory.DestoryItemAsync(itemId);
+    }
+    public override void Dispose()
+    {
+      inventory.Dispose();
+      inventory = null;
+      Equiptor.Dispose();
+      Equiptor = null;
+      base.Dispose();
+    }
   }
 }

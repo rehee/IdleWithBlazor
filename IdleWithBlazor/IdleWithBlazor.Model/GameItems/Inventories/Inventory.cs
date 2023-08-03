@@ -1,4 +1,5 @@
-﻿using IdleWithBlazor.Common.Interfaces.Items;
+﻿using IdleWithBlazor.Common.Interfaces.Actors;
+using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.Actors;
 using System;
 using System.Collections.Concurrent;
@@ -15,9 +16,22 @@ namespace IdleWithBlazor.Model.GameItems.Inventories
     {
       inventoryMapper = new ConcurrentDictionary<Guid, IGameItem>();
     }
+    public override void Init(IActor? parent, params object[] setInfo)
+    {
+      base.Init(parent, setInfo);
+    }
     public override Type TypeDiscriminator => typeof(Inventory);
     private ConcurrentDictionary<Guid, IGameItem>? inventoryMapper { get; set; }
-    public IEnumerable<IGameItem>? InventoryList => inventoryMapper?.Values;
+    public IEnumerable<IGameItem>? Items()
+    {
+      if (inventoryMapper != null)
+      {
+        foreach (var item in inventoryMapper.Values)
+        {
+          yield return item;
+        }
+      }
+    }
 
     public Task<bool> DestoryItemAsync(Guid itemId)
     {

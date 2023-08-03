@@ -15,13 +15,14 @@ namespace IdleWithBlazor.Test.Actors
     [TestCaseSource(nameof(Equiptor_Test_data))]
     public void Equiptor_Test(int index, IEnumerable<IEquipment> preEquip, IEquipment equip, int offset, bool expected)
     {
-      var equipter = new Equiptor();
+      var equiptor = new Equiptor();
+      equiptor.Init(null);
       foreach (var item in preEquip)
       {
-        var success = equipter.Equip(item);
+        var success = equiptor.Equip(item);
         Assert.IsTrue(success);
       }
-      var actual = equipter.Equip(equip, offset);
+      var actual = equiptor.Equip(equip, offset);
       Assert.That(actual, Is.EqualTo(expected));
     }
     private static IEnumerable<TestCaseData> Equiptor_Test_data = new TestCaseData[]
@@ -75,13 +76,14 @@ namespace IdleWithBlazor.Test.Actors
     [TestCaseSource(nameof(Un_Equiptor_Test_data))]
     public void Un_Equiptor_Test(int index, IEnumerable<IEquipment> preEquip, EnumEquipmentSlot equip, int offset, bool expected)
     {
-      var equipter = new Equiptor();
+      var equiptor = new Equiptor();
+      equiptor.Init(null);
       foreach (var item in preEquip)
       {
-        var success = equipter.Equip(item, offset);
+        var success = equiptor.Equip(item, offset);
         Assert.IsTrue(success);
       }
-      var actual = equipter.UnEquip(equip);
+      var actual = equiptor.UnEquip(equip);
       Assert.That(actual.FirstOrDefault() != null, Is.EqualTo(expected));
     }
     private static IEnumerable<TestCaseData> Un_Equiptor_Test_data = new TestCaseData[]

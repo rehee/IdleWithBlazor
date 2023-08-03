@@ -9,7 +9,7 @@ namespace IdleWithBlazor.Common.Interfaces.Items
 {
   public interface IInventory : IActor
   {
-    IEnumerable<IGameItem>? InventoryList { get; }
+    IEnumerable<IGameItem>? Items();
     Task<bool> PickItemAsync(IGameItem? item);
     Task<IGameItem?> TakeOutItemAsync(Guid itemId);
     Task<bool> DestoryItemAsync(Guid itemId);

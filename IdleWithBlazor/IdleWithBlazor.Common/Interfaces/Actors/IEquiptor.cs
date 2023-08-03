@@ -6,6 +6,8 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IEquiptor : IActor
   {
-    ConcurrentDictionary<EnumEquipmentSlot, IEquipment> Equipments { get; set; }
+    IEnumerable<(EnumEquipmentSlot slot, IEquipment equipment)> Equipments();
+    bool Equip(IEquipment equip, int? offset = null);
+    IEnumerable<IEquipment?> UnEquip(params EnumEquipmentSlot[] equips);
   }
 }

@@ -45,5 +45,18 @@ namespace IdleWithBlazor.Server.Services.Items.ItemServices
       return Task.CompletedTask;
     }
 
+    public async Task<IGameItem?> GenerateItemAsync(ITemplate template, EnumItemQuality quality, int itemLevel, CancellationToken cancellationToken = default)
+    {
+      if (template == null)
+      {
+        return default(IGameItem?);
+      }
+      var item = await template.GenerateGameItemAsync(quality, itemLevel, cancellationToken);
+      if (item is IEquipment equipment)
+      {
+        await GenerateRandomProperty(equipment);
+      }
+      return item;
+    }
   }
 }

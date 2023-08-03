@@ -10,5 +10,7 @@ namespace IdleWithBlazor.Web.Services
     Task Send();
     Task KeepSend();
     Task SetPage(EnumUserPage page);
+    Task<bool> EquipItem(Guid? id, int? offset);
+    Task<bool> UnEquipItem(EnumEquipmentSlot slot);
   }
 }

@@ -41,30 +41,19 @@ namespace IdleWithBlazor.Server.Hubs
       await service.SetUserPage(Context.ConnectionId, page);
     }
 
-    public async Task KeepSend()
-    {
-      Console.WriteLine($"{this.GetHashCode()},{Context.ConnectionId} keep send click");
-      //while (!Context.ConnectionAborted.IsCancellationRequested)
-      //{
-      //  await Clients.Caller.SendAsync("ReceiveMessage", $"{this.GetHashCode()}", $"{this.GetHashCode()},{Context.ConnectionId}");
-      //  await Task.Delay(ConstSetting.TickTime / 2);
-      //}
-      Task.Run(async () =>
-      {
-        while (true)
-        {
-          await Clients.Caller.SendAsync("ReceiveMessage", $"{this.GetHashCode()}", $"{this.GetHashCode()},{Context.ConnectionId}");
-          await Task.Delay(ConstSetting.TickTime / 2);
-        }
-      });
-      await Clients.Caller.SendAsync("ReceiveMessage", $"{this.GetHashCode()}", $"{this.GetHashCode()},{Context.ConnectionId}");
 
-      Console.WriteLine("aborted");
-    }
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
       await service.UserLeave(Context.ConnectionId);
       await base.OnDisconnectedAsync(exception);
+    }
+    public async Task<bool> EquipItem(Guid? id, int? offset)
+    {
+      return await service.EquipOrUnequip(Context.ConnectionId, id, offset, null);
+    }
+    public async Task<bool> UnEquipItem(EnumEquipmentSlot slot)
+    {
+      return await service.EquipOrUnequip(Context.ConnectionId, null, null, slot);
     }
   }
 }

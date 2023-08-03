@@ -11,5 +11,7 @@ namespace IdleWithBlazor.Server.Services
     Task SetUserPage(string connectionId, EnumUserPage page);
     Task Broadcast(IEnumerable<IGameRoom> games);
     Task<IEnumerable<Guid>> ConnectedUsers();
+    
+    Task<bool> EquipOrUnequip(string connectionId, Guid? id, int? offset, EnumEquipmentSlot? slot);
   }
 }

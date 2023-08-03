@@ -1,3 +1,56 @@
 ﻿@inherits BackpackPage
 @page "/Backpack"
 <PageTitle>背包</PageTitle>
+@if (Inventory?.Value != null)
+{
+  <div class="flex flex-row">
+    <div class="flex-1 bg-gray-300 overflow-y-auto" style="max-height: 75vh;">
+      <div class="bg-orange-200 grid grid-cols-5 gap-4 ">
+        @foreach (var s in Inventory.Value.Items)
+        {
+          <div class="col-1">
+            @s.Name
+          </div>
+          <div class="col-1">
+            @s.Type
+          </div>
+          <div class="col-1">
+            @s.EquipType
+          </div>
+          <div class="col-1">
+            <input type="button" @onclick="()=>EquipAsync(s.Id)" value="装备" />
+            @if (s.EquipType == Common.Enums.EnumEquipment.Finger || s.EquipType == Common.Enums.EnumEquipment.OneHand)
+            {
+              <input type="button" @onclick="()=>EquipAsync(s.Id,1)" value="[装备 副手]" />
+            }
+          </div>
+          <div class="col-1">
+          </div>
+        }
+
+      </div>
+    </div>
+    <div class="flex-1 bg-gray-400">
+      <div class="bg-orange-200 grid grid-cols-5 gap-4 ">
+        @foreach (var s in Inventory.Value.Equiptor.Equpments)
+        {
+          <div class="col-1">
+            @s.Key
+          </div>
+          <div class="col-1">
+            @s.Value?.Name
+          </div>
+          <div class="col-1">
+            <input type="button" @onclick="()=>UnEquipAsync(s.Key)" value="解除装备" />
+          </div>
+          <div class="col-1">
+          </div>
+          <div class="col-1">
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+}
+

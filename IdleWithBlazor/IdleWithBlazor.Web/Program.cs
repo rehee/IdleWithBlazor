@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Web;
@@ -20,6 +21,7 @@ builder.Services.AddSingleton<IStorageService, StorageService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IConnection, ConnectionService>();
 builder.Services.AddSingleton<IScopedContext<GameRoomDTO>, ScopedContext<GameRoomDTO>>();
+builder.Services.AddSingleton<IScopedContext<InventoryDTO>, ScopedContext<InventoryDTO>>();
 
 builder.Services.AddScoped<IScoped, Scoped>();
 builder.RootComponents.Add<App>("#app");

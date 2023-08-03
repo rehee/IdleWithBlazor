@@ -50,7 +50,9 @@ namespace IdleWithBlazor.Server.Tasks
           //GC.Collect(0);
           count = 0;
         }
+#if RELEASE
         GC.Collect();
+#endif
         await Task.Delay(ConstSetting.TickTime);
       }
     }

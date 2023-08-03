@@ -12,5 +12,6 @@ namespace IdleWithBlazor.Common.Interfaces.Items
   {
     Task<IGameItem?> GenerateItemAsync(ItemPrepareDTO dto, CancellationToken cancellationToken = default);
     Task GenerateRandomProperty(IEquipment equipment);
+    Task<IGameItem?> GenerateItemAsync(ITemplate template, EnumItemQuality quality, int itemLevel, CancellationToken cancellationToken = default);
   }
 }
