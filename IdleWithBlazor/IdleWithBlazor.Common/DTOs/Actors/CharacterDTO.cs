@@ -8,6 +8,6 @@ namespace IdleWithBlazor.Common.DTOs.Actors
 {
   public class CharacterDTO : ActorDTO
   {
-    public SkillSlotDTO? SkillSlot { get; set; }
+    public IEnumerable<SkillSlotDTO>? SkillSlots { get; set; }
   }
 }

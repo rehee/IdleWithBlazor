@@ -55,15 +55,15 @@ namespace IdleWithBlazor.Model.Helpers
         ReChainTarget=false,
         CoolDown=3,
       },
-      //new ActionSkillInfoDTO
-      //{
-      //  Id = Guid.NewGuid(),
-      //  Name = "英勇打击",
-      //  DamageRate=1.5m,
-      //  AttackSpeedRate = 1,
-      //  TargetNumber=1,
-      //  CoolDown=3,
-      //},
+      new ActionSkillInfoDTO
+      {
+        Id = Guid.NewGuid(),
+        Name = "英勇打击",
+        DamageRate=100m,
+        AttackSpeedRate = 1,
+        TargetNumber=5,
+        CoolDown=3,
+      },
     };
   }
 }

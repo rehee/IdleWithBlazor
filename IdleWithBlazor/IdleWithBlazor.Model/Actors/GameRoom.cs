@@ -66,12 +66,9 @@ namespace IdleWithBlazor.Model.Actors
 
     public Task<bool> InitAsync(ICharacter owner)
     {
-      lock (this)
-      {
-        GameOwner = owner;
-        guests = new ConcurrentDictionary<Guid, ICharacter>();
-        return Task.FromResult(true);
-      }
+      GameOwner = owner;
+      guests = new ConcurrentDictionary<Guid, ICharacter>();
+      return Task.FromResult(true);
     }
 
     public Task<bool> JoinGameAsync(ICharacter guest)

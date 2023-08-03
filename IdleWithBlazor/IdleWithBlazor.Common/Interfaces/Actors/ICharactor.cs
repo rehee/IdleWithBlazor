@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.Interfaces.GameActions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
     Task<bool> UpdatePlayerAsync();
     Task<bool> GainCurrency(int exp);
 
-    IActionSlot? ActionSlots { get; }
+    ConcurrentDictionary<int, IActionSlot>? ActionSlots { get; }
 
     IGameRoom? Room { get; }
     IPlayer ThisPlayer { get; }

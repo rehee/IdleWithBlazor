@@ -2,7 +2,9 @@
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.GameActions;
 using IdleWithBlazor.Common.Interfaces.Items;
+using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
+using System.Collections.Concurrent;
 
 namespace IdleWithBlazor.Model.Characters
 {
@@ -26,10 +28,17 @@ namespace IdleWithBlazor.Model.Characters
     public int BaseAttack { get; set; }
     public void Init()
     {
-      ActionSlots = ActorHelper.New<IActionSlot>();
-      ActionSlots.Init(this);
-      ActionSlots.SelectSkill(ActorHelper.ActionSkillPool.FirstOrDefault());
-      ActionSlots.UpdateActionSlot();
+      ActionSlots = new ConcurrentDictionary<int, IActionSlot>();
+      var actionIndex = 0;
+      foreach (var skill in ActorHelper.ActionSkillPool)
+      {
+        var skillSlot = ActorHelper.New<IActionSlot>();
+        skillSlot.Init(this);
+        skillSlot.SelectSkill(skill);
+        skillSlot.UpdateActionSlot();
+        ActionSlots.TryAdd(actionIndex, skillSlot);
+        actionIndex++;
+      }
       Level = 1;
       CurrentExp = 0;
       NextLevelExp = ExpHelper.GetNextLevelExp(Level);
@@ -101,7 +110,8 @@ namespace IdleWithBlazor.Model.Characters
 
     public Equiptor Inventory { get; set; }
 
-    public IActionSlot ActionSlots { get; set; }
+    public ConcurrentDictionary<int, IActionSlot>? ActionSlots { get; set; }
+
     public int CurrentExp { get; set; }
     public int NextLevelExp { get; set; }
     public bool EnableLevelUp { get; set; }

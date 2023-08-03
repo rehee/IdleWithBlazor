@@ -69,7 +69,7 @@ namespace IdleWithBlazor.Common.Helpers
 
       AddDTOMapper<ICharacter, CharacterDTO>((input, dto) =>
       {
-        dto.SkillSlot = input.ActionSlots?.ToDTO<SkillSlotDTO>();
+        dto.SkillSlots = input.ActionSlots?.OrderBy(b => b.Key).Select(b => b.Value.ToDTO<SkillSlotDTO>());
       });
       AddDTOMapper<IActionSlot, SkillSlotDTO>((input, dto) =>
       {

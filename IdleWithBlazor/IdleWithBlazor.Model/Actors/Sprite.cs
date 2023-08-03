@@ -12,9 +12,9 @@ namespace IdleWithBlazor.Model.Actors
     public int MinAttack { get; set; }
     public int MaxAttack { get; set; }
     public virtual IActor Target { get; protected set; }
-    public IActionSlot? ActionSlots { get; set; }
+    public IEnumerable<IActionSlot>? ActionSlots { get; set; }
 
-    protected void SetActionSlots(IActionSlot? actionSlots)
+    protected void SetActionSlots(IEnumerable<IActionSlot>? actionSlots)
     {
       ActionSlots = actionSlots;
     }
@@ -41,7 +41,7 @@ namespace IdleWithBlazor.Model.Actors
         return false;
       }
 
-      return (await Task.WhenAll(ActionSlots.OnTick(sp))).All(b => b == true);
+      return (await Task.WhenAll(ActionSlots.Select(b => b.OnTick(sp)))).All(b => b == true);
       //return await base.OnTick(sp);
 
     }

@@ -14,7 +14,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
     BigInteger CurrentHp { get; set; }
     int MinAttack { get; set; }
     int MaxAttack { get; set; }
-    IActionSlot? ActionSlots { get; }
+    IEnumerable<IActionSlot>? ActionSlots { get; }
 
     IActionSkill[]? ActionSkills { get; }
     void SetActions(IActionSkill[]? skills);
