@@ -11,11 +11,11 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IGameMap : IActor
   {
-    Task<bool> InitAsync(ICharacter? owner, ConcurrentDictionary<Guid, ICharacter>? guests);
+    
     Task<bool> GenerateMobsAsync();
     Task<bool> CloseMapAsync();
 
-    IEnumerable<IPlayer?> Players { get; }
+    IEnumerable<IPlayer?> Players();
     IEnumerable<IMonster?> Monsters { get; }
   }
 }

@@ -14,7 +14,7 @@ namespace IdleWithBlazor.Common.Interfaces.GameActions
     int? CoolDownTick { get; }
     decimal AttackSpeed { get; }
     void UpdateActionSlot();
-    void Init(ICharacter owner);
+    
     void SelectSkill(IActionSkill? skill);
     bool? CurrentTick { get; }
   }

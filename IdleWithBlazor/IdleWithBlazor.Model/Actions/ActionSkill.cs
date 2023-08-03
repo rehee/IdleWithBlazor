@@ -19,7 +19,7 @@ namespace IdleWithBlazor.Model.Actions
     }
     public ActionSkill(IActionSkillInfo info)
     {
-      Init(info);
+      Init(null, info);
     }
     public override Type TypeDiscriminator => typeof(ActionSkill);
     public decimal DamageRate { get; set; }
@@ -73,19 +73,26 @@ namespace IdleWithBlazor.Model.Actions
 
       return Task.FromResult(false); ;
     }
-
-    public void Init(IActionSkillInfo info)
+    public override void Init(IActor? parent, params object[] setInfo)
     {
-      this.Name = info.Name;
-      this.Id = info.Id;
-      this.DamageRate = info.DamageRate;
-      this.CoolDown = info.CoolDown;
-      this.GlobalCoolDown = info.GlobalCoolDown;
-      this.AttackSpeedRate = info.AttackSpeedRate;
-      this.TargetNumber = info.TargetNumber;
-      this.IsChain = info.IsChain;
-      this.ReChainTarget = info.ReChainTarget;
-      this.DamageChainReduction = info.DamageChainReduction;
+      base.Init(null);
+      foreach (var info in setInfo)
+      {
+        if (info is IActionSkillInfo actionInfo)
+        {
+          this.Name = actionInfo.Name;
+          this.Id = actionInfo.Id;
+          this.DamageRate = actionInfo.DamageRate;
+          this.CoolDown = actionInfo.CoolDown;
+          this.GlobalCoolDown = actionInfo.GlobalCoolDown;
+          this.AttackSpeedRate = actionInfo.AttackSpeedRate;
+          this.TargetNumber = actionInfo.TargetNumber;
+          this.IsChain = actionInfo.IsChain;
+          this.ReChainTarget = actionInfo.ReChainTarget;
+          this.DamageChainReduction = actionInfo.DamageChainReduction;
+        }
+      }
     }
+
   }
 }

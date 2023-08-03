@@ -34,9 +34,10 @@ namespace IdleWithBlazor.Common.Helpers
       {
         newList.Add(list[0]);
       }
-      list = null;
       var damageRemain = damage * damageReduction / 100;
       ChainDamage(chainRemain - 1, damageRemain, damageReduction, targetChained, newList);
+      list = null;
+      newList = null;
     }
   }
 }

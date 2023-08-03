@@ -2,9 +2,11 @@
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.GameActions;
+using IdleWithBlazor.Common.Interfaces.Items;
 using IdleWithBlazor.Model.Actions;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Model.Characters;
+using IdleWithBlazor.Model.GameItems.Inventories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,7 @@ namespace IdleWithBlazor.Model.Helpers
       ActorHelper.AddMapper<IEquiptor, Equiptor>();
       ActorHelper.AddMapper<IActionSkill, ActionSkill>();
       ActorHelper.AddMapper<IActionSlot, ActionSlot>();
+      ActorHelper.AddMapper<IInventory, Inventory>();
     }
     public static bool IsInit { get; set; }
     public static void InitModel()

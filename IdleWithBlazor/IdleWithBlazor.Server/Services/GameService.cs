@@ -16,7 +16,10 @@ namespace IdleWithBlazor.Server.Services
 
     public IEnumerable<IGameRoom> Games()
     {
-      return GameRooms.Values.ToArray();
+      foreach (var room in GameRooms.Values)
+      {
+        yield return room;
+      }
     }
 
     public Task<IGameRoom> GetUserRoomAsync(Guid userId)

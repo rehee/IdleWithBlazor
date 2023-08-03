@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Jsons.Converters;
+using IdleWithBlazor.Model.Actors;
 using System.Text.Json;
 
 namespace IdleWithBlazor.Test.Actors
@@ -35,78 +36,14 @@ namespace IdleWithBlazor.Test.Actors
     }
   }
 
-  public class TestActor : IActor
+
+
+  public class TestActor : Actor
   {
-    public Type TypeDiscriminator => typeof(TestActor);
-    public string Name { get; set; }
-    public Guid Id { get; set; }
-    public IEnumerable<IActor> Actors { get; set; }
-    public IEnumerable<IActor> Children { get; set; }
-
-    public IActor? Parent { get; private set; }
-
-    public void Dispose()
-    {
-
-    }
-
-    public ValueTask DisposeAsync()
-    {
-      Dispose();
-      return ValueTask.CompletedTask;
-    }
-
-    public async Task OnInitialization()
-    {
-      await Task.CompletedTask;
-    }
-
-    public Task<bool> OnTick(IServiceProvider sp)
-    {
-      return Task.FromResult(true);
-    }
-
-    public void SetParent(IActor? actor)
-    {
-
-    }
-
-
+    public override Type TypeDiscriminator => typeof(TestActor);
   }
-  public class TestActor2 : IActor
+  public class TestActor2 : Actor
   {
-    public Type TypeDiscriminator => typeof(TestActor2);
-    public string Name { get; set; }
-    public Guid Id { get; set; }
-    public IEnumerable<IActor> Actors { get; set; }
-    public IEnumerable<IActor> Children { get; set; }
-
-    public IActor? Parent { get; private set; }
-
-    public void Dispose()
-    {
-
-    }
-
-    public ValueTask DisposeAsync()
-    {
-      Dispose();
-      return ValueTask.CompletedTask;
-    }
-
-    public async Task OnInitialization()
-    {
-      await Task.CompletedTask;
-    }
-
-    public Task<bool> OnTick(IServiceProvider sp)
-    {
-      return Task.FromResult(true);
-    }
-
-    public void SetParent(IActor? actor)
-    {
-
-    }
+    public override Type TypeDiscriminator => typeof(TestActor2);
   }
 }

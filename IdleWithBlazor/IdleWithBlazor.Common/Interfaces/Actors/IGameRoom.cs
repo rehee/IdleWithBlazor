@@ -16,7 +16,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 
     Guid? OwnerId { get; }
     ICharacter? GameOwner { get; }
-    ICharacter[]? Guests { get; }
+    IEnumerable<ICharacter> Guests();
     IGameMap? Map { get; }
 
   }

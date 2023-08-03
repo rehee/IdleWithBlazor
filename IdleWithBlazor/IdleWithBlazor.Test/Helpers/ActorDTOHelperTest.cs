@@ -80,9 +80,9 @@ namespace IdleWithBlazor.Test.Helpers
           Name = "112",
           GameSummary = new GameSummaryDTO
           {
-
+            Guests = Enumerable.Empty<CharacterDTO>()
           }
-        });
+        }); ;
       var user4 = new Character
       {
         Id = Guid.Empty,
@@ -136,7 +136,7 @@ namespace IdleWithBlazor.Test.Helpers
           Name = "123",
           Owner = new CharacterDTO { Id = Guid.Empty, Name = "112", },
           Guests = new CharacterDTO[] { new CharacterDTO { Id = Guid.Empty, Name = "555" } }
-          
+
         });
     }
   }

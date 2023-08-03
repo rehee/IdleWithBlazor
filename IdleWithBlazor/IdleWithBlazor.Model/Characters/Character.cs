@@ -26,16 +26,15 @@ namespace IdleWithBlazor.Model.Characters
       }
     }
     public int BaseAttack { get; set; }
-    public void Init()
+    public async void Init()
     {
       ActionSlots = new ConcurrentDictionary<int, IActionSlot>();
       var actionIndex = 0;
       foreach (var skill in ActorHelper.ActionSkillPool)
       {
         var skillSlot = ActorHelper.New<IActionSlot>();
-        skillSlot.Init(this);
-        skillSlot.SelectSkill(skill);
-        skillSlot.UpdateActionSlot();
+        skillSlot.Init(this, skill);
+        
         ActionSlots.TryAdd(actionIndex, skillSlot);
         actionIndex++;
       }
@@ -108,7 +107,7 @@ namespace IdleWithBlazor.Model.Characters
       return result;
     }
 
-    public Equiptor Inventory { get; set; }
+
 
     public ConcurrentDictionary<int, IActionSlot>? ActionSlots { get; set; }
 
@@ -128,20 +127,7 @@ namespace IdleWithBlazor.Model.Characters
       return Task.FromResult(true);
     }
 
-    public void PickItem(IGameItem item)
-    {
-      if (Inventory == null)
-      {
-        Inventory = new Equiptor();
-      }
-      if (item is IEquipment ep)
-      {
-        Inventory.Equip(ep);
-      }
 
-
-
-    }
 
     public Task<bool> GainCurrency(int exp)
     {
@@ -149,5 +135,8 @@ namespace IdleWithBlazor.Model.Characters
       BaseAttack = 1 + Level;
       return UpdatePlayerAsync();
     }
+
+
+
   }
 }

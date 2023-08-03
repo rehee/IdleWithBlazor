@@ -26,26 +26,33 @@ namespace IdleWithBlazor.Server.Tasks
     int count = 0;
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      if (hubService == null)
+      while (!stoppingToken.IsCancellationRequested)
       {
-        using var scope = sp.CreateScope();
-        hubService = scope.ServiceProvider.GetService<IHubServices>();
+        if (hubService == null)
+        {
+          using var scope = sp.CreateScope();
+          hubService = scope.ServiceProvider.GetService<IHubServices>();
+        }
+        var connectedUsers = await hubService.ConnectedUsers();
+        var currentGames = service.Games().Select(b => b.OwnerId).ToArray();
+        var userWithNoGame = connectedUsers.Where(b => !currentGames.Contains(b)).ToArray();
+        await Task.WhenAll(userWithNoGame.Select(b => service.NewRoomAsync(b)));
+        await service.OnTick(sp);
+        var games = service.Games();
+        await hubService.Broadcast(games);
+        currentGames = null;
+        connectedUsers = null;
+        userWithNoGame = null;
+        games = null;
+        count++;
+        if (count >= (1000 / ConstSetting.TickTime) * 60)
+        {
+          //GC.Collect(0);
+          count = 0;
+        }
+        GC.Collect();
+        await Task.Delay(ConstSetting.TickTime);
       }
-      var connectedUsers = await hubService.ConnectedUsers();
-      var currentGames = service.Games();
-      var userWithNoGame = connectedUsers.Where(b => !currentGames.Select(b => b.OwnerId).Contains(b)).ToArray();
-      await Task.WhenAll(userWithNoGame.Select(b => service.NewRoomAsync(b)));
-      await service.OnTick(sp);
-      
-
-      await hubService.Broadcast(service.Games());
-      await Task.Delay(ConstSetting.TickTime);
-      count++;
-      if (count >= (1000 / ConstSetting.TickTime) * 60)
-      {
-        GC.Collect(0);
-      }
-      ExecuteAsync(stoppingToken);
     }
   }
 }

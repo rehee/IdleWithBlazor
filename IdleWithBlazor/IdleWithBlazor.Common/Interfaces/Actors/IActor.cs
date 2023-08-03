@@ -13,9 +13,12 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 
     Task OnInitialization();
     Task<bool> OnTick(IServiceProvider sp);
-    IEnumerable<IActor> Children { get; set; }
+    IEnumerable<IActor> Children();
+    Task<bool> AddChildrenAsync(params IActor[] actors);
+    Task<bool> RemoveChildrenAsync(params Guid[] actorIds);
     [JsonIgnore]
     IActor? Parent { get; }
     void SetParent(IActor? actor);
+    void Init(IActor? parent, params object[] setInfo);
   }
 }

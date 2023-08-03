@@ -22,9 +22,16 @@ namespace IdleWithBlazor.Model.Actions
 
     public decimal AttackSpeed { get; set; }
 
-    public void Init(ICharacter owner)
+    public override void Init(IActor? parent, params object[] setInfo)
     {
-      SetParent(owner);
+      base.Init(parent, setInfo);
+
+      var skill = setInfo.Where(b => b is IActionSkill).Select(b => b as IActionSkill).FirstOrDefault();
+      if (skill != null)
+      {
+        SelectSkill(skill);
+        UpdateActionSlot();
+      }
     }
 
     public void SelectSkill(IActionSkill? skill)
@@ -67,7 +74,6 @@ namespace IdleWithBlazor.Model.Actions
     public override void Dispose()
     {
       ActionSkill = null;
-      Parent = null;
       base.Dispose();
     }
   }

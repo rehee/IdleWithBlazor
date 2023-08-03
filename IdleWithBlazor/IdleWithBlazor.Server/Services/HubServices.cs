@@ -71,7 +71,9 @@ namespace IdleWithBlazor.Server.Services
 
             try
             {
-              combatJson = JsonSerializer.Serialize(q.Geme.ToDTO<GameRoomDTO>(), ConstSetting.Options);
+              var dto = q.Geme.ToDTO<GameRoomDTO>();
+              combatJson = JsonSerializer.Serialize(dto, ConstSetting.Options);
+              dto = null;
             }
             catch (Exception ex)
             {
@@ -82,6 +84,7 @@ namespace IdleWithBlazor.Server.Services
             return Task.CompletedTask;
         }
       }));
+      query = null;
       await Task.CompletedTask;
     }
 

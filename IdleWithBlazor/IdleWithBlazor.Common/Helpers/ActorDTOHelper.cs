@@ -85,18 +85,18 @@ namespace IdleWithBlazor.Common.Helpers
       });
       AddDTOMapper<IGameMap, GameMapDTO>((input, dto) =>
       {
-        dto.Players = input.Players?.Select(b => b.ToDTO<PlayerDTO>());
+        dto.Players = input.Players().Select(b => b.ToDTO<PlayerDTO>());
         dto.Monsters = input.Monsters?.Select(b => b.ToDTO<MonsterDTO>());
       });
       AddDTOMapper<IGameRoom, GameRoomDTO>((input, dto) =>
       {
         dto.Owner = input.GameOwner?.ToDTO<CharacterDTO>();
-        dto.Guests = input.Guests?.Select(x => x.ToDTO<CharacterDTO>());
+        dto.Guests = input.Guests()?.Select(x => x.ToDTO<CharacterDTO>());
         dto.GameMap = input.Map?.ToDTO<GameMapDTO>();
       });
       AddDTOMapper<IGameRoom, GameSummaryDTO>((input, dto) =>
       {
-        dto.Guests = input.Guests?.Select(x => x.ToDTO<CharacterDTO>()) ?? null;
+        dto.Guests = input.Guests().Select(x => x.ToDTO<CharacterDTO>()) ?? null;
       });
     }
 

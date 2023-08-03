@@ -30,10 +30,12 @@ namespace IdleWithBlazor.Model.GameItems.Items.Equipments
 
     public Equipment(string name, EnumEquipment equipment, EnumItemQuality quality, int itemLevel = 1)
     {
+      Id = Guid.NewGuid();
+      Name = name;
       ItemLevel = itemLevel;
       ItemQuality = quality;
       EquipmentType = equipment;
-      Name = name;
+
     }
   }
 }

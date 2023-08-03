@@ -8,21 +8,28 @@ namespace IdleWithBlazor.Model.Actors
   public class GameRoom : Actor, IGameRoom
   {
     public override Type TypeDiscriminator => typeof(GameRoom);
-    public override IEnumerable<IActor> Children
+    public override IEnumerable<IActor> Children()
     {
-      get
+      if (Map != null)
       {
-        return Map != null ? new IActor[] { Map } : Enumerable.Empty<IActor>();
+        yield return Map;
       }
-      set => base.Children = value;
     }
     public Guid? OwnerId => GameOwner?.Id;
     [JsonIgnore]
     public ICharacter? GameOwner { get; private set; }
 
     private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
-    [JsonIgnore]
-    public ICharacter[]? Guests => guests?.Select(b => b.Value).ToArray();
+    public IEnumerable<ICharacter> Guests()
+    {
+      if (guests != null)
+      {
+        foreach (var guest in guests.Values)
+        {
+          yield return guest;
+        }
+      }
+    }
 
     public IGameMap? Map { get; set; }
 
@@ -58,7 +65,7 @@ namespace IdleWithBlazor.Model.Actors
       Map = ActorHelper.New<IGameMap>();
       if (Map != null)
       {
-        await Map.InitAsync(GameOwner, guests);
+        Map.Init(this);
         return true;
       }
       return false;

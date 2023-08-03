@@ -26,25 +26,25 @@ namespace IdleWithBlazor.Test.Actors
       var c3 = ActorHelper.New<ICharacter>();
       await c3.JoinGameAsync(room);
 
-      Assert.That(room.Guests.Count, Is.EqualTo(2));
+      Assert.That(room.Guests().Count, Is.EqualTo(2));
 
       await room.CreateMapAsync();
 
       await room.Map.GenerateMobsAsync();
 
-      Assert.That(room.Map.Players.Count(), Is.EqualTo(3));
+      Assert.That(room.Map.Players().Count(), Is.EqualTo(3));
 
       var c4 = ActorHelper.New<ICharacter>();
       await c4.JoinGameAsync(room);
-      Assert.That(room.Map.Players.Count(), Is.EqualTo(4));
+      Assert.That(room.Map.Players().Count(), Is.EqualTo(4));
 
       await c4.LeaveGameAsync();
-      Assert.That(room.Map.Players.Count(), Is.EqualTo(3));
+      Assert.That(room.Map.Players().Count(), Is.EqualTo(3));
 
       await c2.KickPlayerAsync(c3.Id);
-      Assert.That(room.Map.Players.Count(), Is.EqualTo(3));
+      Assert.That(room.Map.Players().Count(), Is.EqualTo(3));
       await c1.KickPlayerAsync(c3.Id);
-      Assert.That(room.Map.Players.Count(), Is.EqualTo(2));
+      Assert.That(room.Map.Players().Count(), Is.EqualTo(2));
       Assert.That(c3.Room, Is.Null);
       await c1.LeaveGameAsync();
       Assert.That(c1.Room, Is.Null);
@@ -67,7 +67,7 @@ namespace IdleWithBlazor.Test.Actors
     {
       var c1 = ActorHelper.New<ICharacter>();
       c1.Init();
-      
+
       var room = await c1.CreateRoomAsync();
       await room.CreateMapAsync();
       await room.Map.GenerateMobsAsync();

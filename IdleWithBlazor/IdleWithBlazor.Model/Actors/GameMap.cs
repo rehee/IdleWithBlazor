@@ -1,6 +1,7 @@
 ﻿using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using System.Collections.Concurrent;
+using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace IdleWithBlazor.Model.Actors
@@ -8,38 +9,42 @@ namespace IdleWithBlazor.Model.Actors
   public class GameMap : Actor, IGameMap
   {
     public override Type TypeDiscriminator => typeof(GameMap);
-    public override IEnumerable<IActor> Children
+    public override IEnumerable<IActor> Children()
     {
-      get
+      foreach (var player in Players())
       {
-        var players = Players.Select(b =>
-        {
-          if (b is IActor a)
-          {
-            return (true, a);
-          }
-          return (false, default(IActor));
-        }).Where(b => b.Item1).Select(b => b.Item2);
-        var mobs = Monsters.Select(b =>
-        {
-          if (b is IActor a)
-          {
-            return (true, a);
-          }
-          return (false, default(IActor));
-        }).Where(b => b.Item1).Select(b => b.Item2);
-
-        return players.Concat(mobs);
+        yield return player;
       }
-      set => base.Children = value;
+      if (monsters != null)
+      {
+        foreach (var mob in monsters)
+        {
+          yield return mob;
+        }
+      }
+
     }
-    public IEnumerable<IPlayer?> Players => (new IPlayer?[] { owner?.ThisPlayer }).Concat(guests?.Values.Select(b => b.ThisPlayer) ?? Enumerable.Empty<IPlayer?>());
+    public IEnumerable<IPlayer> Players()
+    {
+      if (owner != null)
+      {
+        yield return owner?.ThisPlayer;
+      }
+      if (guests != null)
+      {
+        foreach (var g in guests())
+        {
+          yield return g.ThisPlayer;
+        }
+      }
+
+    }
     public IEnumerable<IMonster?> Monsters => monsters ?? Enumerable.Empty<IMonster?>();
 
     private List<IMonster> monsters { get; set; }
 
     private ICharacter? owner { get; set; }
-    private ConcurrentDictionary<Guid, ICharacter>? guests { get; set; }
+    private Func<IEnumerable<ICharacter>> guests { get; set; }
 
     public async Task<bool> CloseMapAsync()
     {
@@ -61,40 +66,55 @@ namespace IdleWithBlazor.Model.Actors
       if (monsters == null)
       {
         monsters = new List<IMonster>();
-      }
-      monsters.Clear();
-      for (var i = 0; i < 5; i++)
-      {
-        var m = ActorHelper.New<IMonster>();
-        m.Name = "小野怪";
-        m.CurrentHp = 10;
-        m.MaxHp = 10;
-        m.Level = 1;
-        if (m != null)
+        for (var i = 0; i < 5; i++)
         {
-          monsters.Add(m);
+          var m = ActorHelper.New<IMonster>();
+          m.Name = "小野怪";
+          m.CurrentHp = 10;
+          m.MaxHp = 10;
+          m.Level = 1;
+          if (m != null)
+          {
+            monsters.Add(m);
+          }
         }
+      }
+      //monsters.Clear();
+      foreach (var m in monsters)
+      {
+        m.CurrentHp = m.MaxHp;
       }
       return Task.FromResult(true);
     }
 
-    public Task<bool> InitAsync(ICharacter? owner, ConcurrentDictionary<Guid, ICharacter>? guests)
+    public override void Init(IActor? parent, params object[] setInfo)
     {
-      this.owner = owner;
-      this.guests = guests;
-      MonsterRespawnRate = 50;
-      MonsterRespawn = MonsterRespawnRate;
-      FirstRespawn = true;
-      return Task.FromResult(true);
+      base.Init(parent, setInfo);
+      if (parent != null && parent is IGameRoom room)
+      {
+        this.owner = room.GameOwner;
+        this.guests = () => room.Guests();
+        MonsterRespawnRate = 50;
+        MonsterRespawn = MonsterRespawnRate;
+        FirstRespawn = true;
+      }
     }
+
     private bool FirstRespawn { get; set; }
     public int MonsterRespawnRate { get; set; }
     public int MonsterRespawn { get; set; }
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
+      var monster = Monsters.ToList();
+      if (monster.All(b => b.CurrentHp <= 0))
+      {
+        monster = null;
+        return await GenerateMobsAsync();
+
+      }
       var baseResult = await base.OnTick(sp);
-      var monster = Monsters;
-      foreach (var player in Players.Where(b => b != null).ToArray())
+
+      foreach (var player in Players())
       {
         if (player.ActionSlots == null)
         {
@@ -109,17 +129,14 @@ namespace IdleWithBlazor.Model.Actors
           {
             var exp = ExpHelper.GetMonsterExp(m.Level);
             await owner.GainCurrency(exp);
-            await Task.WhenAll(guests.Values.Select(b => b.GainCurrency(exp)));
+            await Task.WhenAll(guests().Select(b => b.GainCurrency(exp)));
           }
           livedMonster = null;
           killedMonster = null;
         }
 
       }
-      if (monster.All(b => b.CurrentHp <= 0))
-      {
-        await GenerateMobsAsync();
-      }
+      monster = null;
       return baseResult;
     }
   }
