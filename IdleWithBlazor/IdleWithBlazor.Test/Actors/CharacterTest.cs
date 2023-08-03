@@ -67,16 +67,17 @@ namespace IdleWithBlazor.Test.Actors
     {
       var c1 = ActorHelper.New<ICharacter>();
       c1.Init();
-      c1.ActionSlots[0] = null;
+      
       var room = await c1.CreateRoomAsync();
       await room.CreateMapAsync();
       await room.Map.GenerateMobsAsync();
-      for (var i = 0; i < 11; i++)
+      for (var i = 0; i < 999; i++)
       {
         await room.OnTick(default(IServiceProvider));
       }
+      c1.ActionSlots[0] = null;
       //Assert.That(room.Map.Monsters.FirstOrDefault().CurrentHp, Is.EqualTo(new BigInteger(10)));
-      for (var i = 0; i < 11; i++)
+      for (var i = 0; i < 999; i++)
       {
         await room.OnTick(default(IServiceProvider));
       }
