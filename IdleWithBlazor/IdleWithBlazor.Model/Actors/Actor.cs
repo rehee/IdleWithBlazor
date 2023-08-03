@@ -52,7 +52,7 @@ namespace IdleWithBlazor.Model.Actors
     {
       if (Children?.Any() == true)
       {
-        var results = await Task.WhenAll(Children.Select(b => b.OnTick(sp)).ToArray());
+        var results = await Task.WhenAll(Children.Select(b => b?.OnTick(sp)).ToArray());
         return results?.All(b => b == true) ?? false;
       }
       return true;

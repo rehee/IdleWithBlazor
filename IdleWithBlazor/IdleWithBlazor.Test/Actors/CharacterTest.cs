@@ -67,6 +67,7 @@ namespace IdleWithBlazor.Test.Actors
     {
       var c1 = ActorHelper.New<ICharacter>();
       c1.Init();
+      c1.ActionSlots[0] = null;
       var room = await c1.CreateRoomAsync();
       await room.CreateMapAsync();
       await room.Map.GenerateMobsAsync();

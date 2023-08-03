@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.GameActions;
+using System.Collections.Concurrent;
 using System.Numerics;
 
 namespace IdleWithBlazor.Model.Actors
@@ -12,11 +13,11 @@ namespace IdleWithBlazor.Model.Actors
     public int MinAttack { get; set; }
     public int MaxAttack { get; set; }
     public virtual IActor Target { get; protected set; }
-    public IEnumerable<IActionSlot>? ActionSlots { get; set; }
-
-    protected void SetActionSlots(IEnumerable<IActionSlot>? actionSlots)
+    public IEnumerable<IActionSlot>? ActionSlots => slots?.Values;
+    private ConcurrentDictionary<int, IActionSlot>? slots { get; set; }
+    protected void SetActionSlots(ConcurrentDictionary<int, IActionSlot>? actionSlots)
     {
-      ActionSlots = actionSlots;
+      slots = actionSlots;
     }
     public virtual void SetTarget(IActor target)
     {
@@ -41,7 +42,7 @@ namespace IdleWithBlazor.Model.Actors
         return false;
       }
 
-      return (await Task.WhenAll(ActionSlots.Select(b => b.OnTick(sp)))).All(b => b == true);
+      return (await Task.WhenAll(ActionSlots.Where(b => b != null).Select(b => b?.OnTick(sp)))).All(b => b == true);
       //return await base.OnTick(sp);
 
     }

@@ -100,7 +100,7 @@ namespace IdleWithBlazor.Model.Actors
         {
           continue;
         }
-        foreach (var action in player.ActionSlots.Where(b => b.CurrentTick == true))
+        foreach (var action in player.ActionSlots.Where(b => b?.CurrentTick == true))
         {
           var livedMonster = monster.Where(b => b.CurrentHp > 0).ToArray();
           await action.ActionSkill.Attack(player, livedMonster);

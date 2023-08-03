@@ -31,7 +31,7 @@ namespace IdleWithBlazor.Model.Actors
       this.NextLevelExp = character.NextLevelExp;
       this.MinAttack = character.BaseAttack;
       this.MaxAttack = character.BaseAttack;
-      SetActionSlots(character.ActionSlots.Values);
+      SetActionSlots(character.ActionSlots);
     }
 
   }
