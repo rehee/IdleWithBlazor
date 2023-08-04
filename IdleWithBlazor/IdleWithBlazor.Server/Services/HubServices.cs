@@ -66,6 +66,7 @@ namespace IdleWithBlazor.Server.Services
             try
             {
               var dto = q.c.Room.ToDTO<GameRoomDTO>();
+              dto.Owner = q.c?.ToDTO<CharacterDTO>();
               combatJson = JsonSerializer.Serialize(dto, ConstSetting.Options);
               dto = null;
             }
