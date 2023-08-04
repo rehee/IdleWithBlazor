@@ -1,4 +1,5 @@
 ﻿using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.GameActions.Skills;
 using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Services;
 using IdleWithBlazor.Web.Services;
@@ -18,7 +19,8 @@ namespace IdleWithBlazor.Web.Components
     public IScopedContext<GameRoomDTO> Room { get; protected set; }
     [Inject]
     public IScopedContext<InventoryDTO> Inventory { get; protected set; }
-
+    [Inject]
+    public IScopedContext<SkillBookDTO> SkillBook { get; protected set; }
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();
@@ -44,7 +46,7 @@ namespace IdleWithBlazor.Web.Components
         return;
       }
       IsDisposed = true;
-      
+
     }
 
   }

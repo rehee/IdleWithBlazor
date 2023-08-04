@@ -21,44 +21,56 @@ namespace IdleWithBlazor.Server.Services
         yield return room;
       }
     }
-
-    public Task<IGameRoom> GetUserRoomAsync(Guid userId)
+    public IEnumerable<ICharacter> GetCharacters()
     {
-      if (GameRooms.TryGetValue(userId, out var room))
+      foreach (var character in Characters.Values)
       {
-        return Task.FromResult(room);
+        yield return character;
       }
-      return Task.FromResult(default(IGameRoom));
+    }
+    public IEnumerable<Guid> GetUserWithCharacters()
+    {
+      foreach (var userId in Characters.Keys)
+      {
+        yield return userId;
+      }
+    }
+    public Task<ICharacter?> GetCharacterAsync(Guid userId)
+    {
+      if (Characters.TryGetValue(userId, out var user))
+      {
+        return Task.FromResult(user);
+      }
+      return Task.FromResult(default(ICharacter));
+    }
+    public Task<ICharacter?> CreateCharacterAsync(Guid userId)
+    {
+      var character = ActorHelper.New<ICharacter>(userId, $"查内姆 {userId.ToString().Split("-")[0]}");
+      character.Init();
+      if (Characters.TryAdd(userId, character))
+      {
+        return Task.FromResult(character);
+      }
+      return null;
+    }
+    public async Task<IGameRoom?> GetUserRoomAsync(Guid userId)
+    {
+      var user = await GetCharacterAsync(userId);
+      return user?.Room;
     }
 
     public async Task NewRoomAsync(Guid userId)
     {
-      var character = ActorHelper.New<ICharacter>(userId, "查内姆");
-      character.Init();
+      var character = await GetCharacterAsync(userId);
+      if (character == null || character.Room != null)
+      {
+        return;
+      }
       var game = await character.CreateRoomAsync();
       await game.CreateMapAsync();
       await game.Map.GenerateMobsAsync();
-      GameRooms.TryAdd(userId, game);
-      //var game = new GameRoom();
-      //game.OwnerId = userId;
-      //game.Map = new GameMap();
-      //var player = new Player();
-      //var mob = new Monster();
-      //game.Map.Add(player);
-      //game.Map.Add(mob);
-      //mob.MaxHp = 50;
-      //mob.CurrentHp = 50;
-      //var skill = new Attack();
-      //skill.Init(1);
-      //player.SetAction(skill);
-      //player.SetTarget(mob);
-      //GameRooms.TryAdd(userId, game);
-      //player.PickItem(new Equipment()
-      //{
-      //  Name = "item",
-      //  EquipmentType = Common.Enums.EnumEquipment.Neck
-      //});
-      //return Task.CompletedTask;
+      GameRooms.AddOrUpdate(userId, game, (b, c) => game);
+
     }
 
     public async Task OnTick(IServiceProvider sp)

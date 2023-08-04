@@ -8,6 +8,6 @@ namespace IdleWithBlazor.Common.Interfaces
 {
   public interface IGuidId
   {
-    Guid Id { get; }
+    Guid Id { get; set; }
   }
 }

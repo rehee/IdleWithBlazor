@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.Consts;
 using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.GameActions.Skills;
 using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
@@ -94,7 +95,19 @@ namespace IdleWithBlazor.Server.Services
               Console.WriteLine(ex);
             }
             return q.Client.SendAsync("BackPackMessage", inventoryJson);
-
+          case EnumUserPage.Character:
+            string skilJson = null;
+            try
+            {
+              var dto = q.Geme.GameOwner.ToDTO<SkillBookDTO>();
+              skilJson = JsonHelper.ToJson(dto);
+              dto = null;
+            }
+            catch (Exception ex)
+            {
+              Console.WriteLine(ex);
+            }
+            return q.Client.SendAsync("CharacterMessage", skilJson);
           default:
             return Task.CompletedTask;
         }
@@ -108,7 +121,7 @@ namespace IdleWithBlazor.Server.Services
 
     public Task<IEnumerable<Guid>> ConnectedUsers()
     {
-      var result = ConnectionIdUserMap.Values.Select(b => b).ToArray() ?? Enumerable.Empty<Guid>();
+      var result = ConnectionIdUserMap.Values.Select(b => b) ?? Enumerable.Empty<Guid>();
       return Task.FromResult(result);
     }
 
@@ -125,6 +138,7 @@ namespace IdleWithBlazor.Server.Services
       return ValueTask.CompletedTask;
     }
 
+    #region equip or un-equip need refactory
     public async Task<bool> EquipOrUnequip(string connectionId, Guid? id, int? offset, EnumEquipmentSlot? slot)
     {
       var userIdFound = ConnectionIdUserMap.TryGetValue(connectionId, out var userId);
@@ -225,5 +239,15 @@ namespace IdleWithBlazor.Server.Services
       }
       return true;
     }
+
+    public async Task SelectSkill(string connectionId, Guid skillId, int slot)
+    {
+
+      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId) && GameService.Characters.TryGetValue(userId, out var character))
+      {
+        await character.PickSkill(skillId, slot);
+      }
+    }
+    #endregion
   }
 }

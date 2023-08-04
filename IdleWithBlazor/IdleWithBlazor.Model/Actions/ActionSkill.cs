@@ -19,6 +19,7 @@ namespace IdleWithBlazor.Model.Actions
     }
     public ActionSkill(IActionSkillInfo info)
     {
+      Id = info.Id;
       Init(null, info);
     }
     public override Type TypeDiscriminator => typeof(ActionSkill);

@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace IdleWithBlazor.Common.Interfaces.Actors
 {
-  public interface IActor : IAsyncDisposable, IDisposable, ITyped, IName
+  public interface IActor : IAsyncDisposable, IDisposable, ITyped, IName, IGuidId
   {
-    Guid Id { get; set; }
-
     Task OnInitialization();
     Task<bool> OnTick(IServiceProvider sp);
     IEnumerable<IActor> Children();

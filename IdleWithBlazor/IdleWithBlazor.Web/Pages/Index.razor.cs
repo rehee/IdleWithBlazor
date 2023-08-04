@@ -6,22 +6,27 @@ namespace IdleWithBlazor.Web.Pages
 {
   public class IndexPage : PageBase
   {
-    public string m { get; set; }
-    public async Task Send()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-      await connection.ConnectionAsync();
-      await connection.Send();
+      await base.OnAfterRenderAsync(firstRender);
+      if (firstRender)
+      {
+        SkillBook.ValueChange += SkillBook_ValueChange;
+      }
     }
-    public async Task Keep()
+    public async Task SelectSkill(Guid skillId, int slot)
     {
-      await connection.ConnectionAsync();
-      await connection.KeepSend();
+      await connection.SelectSkill(skillId, slot);
     }
-    public async Task GetRoom()
+    public override async ValueTask DisposeAsync()
     {
-      await connection.ConnectionAsync();
-      
+      await base.DisposeAsync();
+      SkillBook.ValueChange -= SkillBook_ValueChange;
     }
+    private void SkillBook_ValueChange(object? sender, Common.Events.ContextScopeEventArgs<Common.DTOs.GameActions.Skills.SkillBookDTO> e)
+    {
 
+      StateHasChanged();
+    }
   }
 }

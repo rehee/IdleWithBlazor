@@ -10,5 +10,6 @@ namespace IdleWithBlazor.Common.DTOs.Actors
   {
     public string Name { get; set; }
     public int? Processing { get; set; }
+    public bool IsPicked { get; set; }
   }
 }

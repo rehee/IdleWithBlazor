@@ -55,5 +55,9 @@ namespace IdleWithBlazor.Server.Hubs
     {
       return await service.EquipOrUnequip(Context.ConnectionId, null, null, slot);
     }
+    public async Task SelectSkill(Guid skillId, int slot)
+    {
+      await service.SelectSkill(Context.ConnectionId, skillId,  slot);
+    }
   }
 }

@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdleWithBlazor.Entity", "Id
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdleWithBlazor.Model", "IdleWithBlazor.Model\IdleWithBlazor.Model.csproj", "{44BB7D0F-10E5-4443-94C1-454B727BAF12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdleWithBlazor.Test", "IdleWithBlazor.Test\IdleWithBlazor.Test.csproj", "{6AB1F2D9-426E-42FD-82FA-FE62135A7584}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdleWithBlazor.Test", "IdleWithBlazor.Test\IdleWithBlazor.Test.csproj", "{6AB1F2D9-426E-42FD-82FA-FE62135A7584}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{465C0715-5FA4-4B73-90E4-34B76C118F18}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

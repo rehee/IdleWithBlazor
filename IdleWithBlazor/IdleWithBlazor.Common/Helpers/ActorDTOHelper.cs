@@ -1,4 +1,6 @@
-﻿using IdleWithBlazor.Common.DTOs.Actors;
+﻿using IdleWithBlazor.Common.Consts;
+using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.GameActions.Skills;
 using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Interfaces.Actors;
@@ -77,6 +79,7 @@ namespace IdleWithBlazor.Common.Helpers
       AddDTOMapper<IActionSlot, SkillSlotDTO>((input, dto) =>
       {
         dto.Name = input.Name;
+        dto.IsPicked = input.ActionSkill != null;
         if (input.CoolDownTick.HasValue && input.CoolDownTick != 0)
         {
           dto.Processing = ((input.CoolDownTick - input.CoolDownTickRemain) * 100) / input.CoolDownTick;
@@ -131,6 +134,27 @@ namespace IdleWithBlazor.Common.Helpers
             }).FirstOrDefault());
         }
         itemsEquiped = null;
+      });
+      AddDTOMapper<IActionSkill, SkillPoolDTO>((input, dto) =>
+      {
+
+      });
+      AddDTOMapper<ICharacter, SkillBookDTO>((input, dto) =>
+      {
+        dto.SkillPools = ActorHelper.ActionSkillPool.Select(b => b.ToDTO<SkillPoolDTO>()).ToArray();
+        dto.SkillSlots = new Dictionary<int, SkillPickDTO?>();
+        for (var i = 0; i < ConstSetting.SkillLimit; i++)
+        {
+          if (input.ActionSlots.TryGetValue(i, out var characterSkill) && characterSkill != null && characterSkill.ActionSkill != null)
+          {
+            dto.SkillSlots.TryAdd(i, characterSkill.ActionSkill.ToDTO<SkillPickDTO>());
+          }
+          else
+          {
+            dto.SkillSlots.TryAdd(i, null);
+          }
+
+        }
       });
 
     }

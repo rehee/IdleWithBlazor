@@ -7,7 +7,7 @@
     <div class="bg-orange-200 grid grid-cols-5 gap-4">
       @if (Room?.Value?.Owner?.SkillSlots?.Any() == true)
       {
-        foreach (var s in Room?.Value?.Owner?.SkillSlots)
+        foreach (var s in Room?.Value?.Owner?.SkillSlots?.Where(b => b.IsPicked))
         {
           <div class="col-1">
             @s.Name
@@ -20,7 +20,7 @@
             </div>
           </div>
         }
-        
+
 
       }
       @if (Room?.Value?.GameMap?.Players?.Any() == true)

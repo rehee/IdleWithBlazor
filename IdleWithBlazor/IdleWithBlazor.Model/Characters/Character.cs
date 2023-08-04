@@ -29,15 +29,13 @@ namespace IdleWithBlazor.Model.Characters
     public async void Init()
     {
       ActionSlots = new ConcurrentDictionary<int, IActionSlot>();
-      var actionIndex = 0;
-      foreach (var skill in ActorHelper.ActionSkillPool)
+      for (var i = 0; i < 6; i++)
       {
         var skillSlot = ActorHelper.New<IActionSlot>();
-        skillSlot.Init(this, skill);
-
-        ActionSlots.TryAdd(actionIndex, skillSlot);
-        actionIndex++;
+        skillSlot.Init(this);
+        ActionSlots.TryAdd(i, skillSlot);
       }
+
       Level = 1;
       CurrentExp = 0;
       NextLevelExp = ExpHelper.GetNextLevelExp(Level);
@@ -112,7 +110,17 @@ namespace IdleWithBlazor.Model.Characters
       return result;
     }
 
+    public Task<bool> PickSkill(Guid skillId, int slot)
+    {
+      if (ActionSlots.TryGetValue(slot, out var skillslot))
+      {
+        var skill = ActorHelper.ActionSkillPool.FirstOrDefault(b => b.Id == skillId);
+        skillslot.SelectSkill(skill);
+        skillslot.UpdateActionSlot();
+      }
+      return Task.FromResult(true);
 
+    }
 
     public ConcurrentDictionary<int, IActionSlot>? ActionSlots { get; set; }
 

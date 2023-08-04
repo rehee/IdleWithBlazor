@@ -1,5 +1,6 @@
 ﻿using IdleWithBlazor.Common.Consts;
 using IdleWithBlazor.Common.DTOs.Actors;
+using IdleWithBlazor.Common.DTOs.GameActions.Skills;
 using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
@@ -15,14 +16,20 @@ namespace IdleWithBlazor.Web.Services
     private readonly IStorageService storage;
     private readonly IScopedContext<GameRoomDTO> room;
     private readonly IScopedContext<InventoryDTO> inventory;
+    private readonly IScopedContext<SkillBookDTO> skillbook;
     private readonly Setting setting;
 
     private HubConnection? hub { get; set; } = null;
-    public ConnectionService(IStorageService storage, IScopedContext<GameRoomDTO> room, IScopedContext<InventoryDTO> inventory, Setting setting)
+    public ConnectionService(IStorageService storage, Setting setting,
+      IScopedContext<GameRoomDTO> room,
+      IScopedContext<InventoryDTO> inventory,
+      IScopedContext<SkillBookDTO> skillbook
+      )
     {
       this.storage = storage;
       this.room = room;
       this.inventory = inventory;
+      this.skillbook = skillbook;
       this.setting = setting;
     }
     public async Task<bool> AbortAsync()
@@ -73,6 +80,10 @@ namespace IdleWithBlazor.Web.Services
         {
           inventory.SetValue(JsonHelper.ToObject<InventoryDTO>(r));
         });
+        hub.On<string>("CharacterMessage", r =>
+        {
+          skillbook.SetValue(JsonHelper.ToObject<SkillBookDTO>(r));
+        });
         await hub.StartAsync();
         return true;
       }
@@ -111,6 +122,10 @@ namespace IdleWithBlazor.Web.Services
     {
       await hub.SendAsync("UnEquipItem", slot);
       return true;
+    }
+    public async Task SelectSkill(Guid skillId, int slot)
+    {
+      await hub.SendAsync("SelectSkill", skillId, slot);
     }
   }
 }

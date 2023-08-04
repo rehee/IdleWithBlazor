@@ -1,17 +1,51 @@
 ﻿@inherits IndexPage
 @page "/"
+@using IdleWithBlazor.Common.Consts;
 
 <PageTitle>角色</PageTitle>
 
-<p>
-  @m
-</p>
-<p>
-  <input type="button" @onclick="Send" value="123" />
-</p>
-<p>
-  <input type="button" @onclick="Keep" value="Keep" />
-</p>
-<p>
-  <input type="button" @onclick="GetRoom" value="GetRoom" />
-</p>
+<div class="flex flex-row">
+  <div class="flex-1 bg-gray-300">
+    <div class="bg-orange-200 grid grid-cols-5 gap-4">
+      @if (SkillBook?.Value?.SkillPools?.Any() == true)
+      {
+        foreach (var s in SkillBook?.Value?.SkillPools)
+        {
+
+          <div class="col-span-3">
+            @s.Name
+          </div>
+          <div class="col-span-2">
+            @for (var i = 0; i < ConstSetting.SkillLimit; i++)
+            {
+              int local_i = i;
+              <input @onclick="()=>SelectSkill(s.Id, local_i)" style="text-align:center;" class="w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 focus:bg-blue-600 focus:outline-none" value="@i" />
+            }
+          </div>
+        }
+      }
+      @* @if (Room?.Value?.GameMap?.Players?.Any() == true)
+      {
+      foreach (var p in Room?.Value?.GameMap?.Players)
+      {
+      <div class="col-span-3">
+      @p.Name @p.Level @p.CurrentExp
+      </div>
+      }
+      }*@
+    </div>
+  </div>
+  <div class="flex-1 bg-gray-400">
+    @if (SkillBook?.Value?.SkillSlots != null)
+    {
+      foreach (var s in SkillBook?.Value?.SkillSlots)
+      {
+        <div>
+          @s.Key @s.Value?.Name <input type="button" @onclick="()=> SelectSkill(Guid.Empty,s.Key)" value="移除"/>
+        </div>
+      }
+    }
+
+
+  </div>
+</div>

@@ -23,6 +23,8 @@ namespace IdleWithBlazor.Server.Helpers
       new EquipmentTemplate(EnumEquipment.Leg,"护腿"),
       new EquipmentTemplate(EnumEquipment.Shoulder,"护肩"),
       new EquipmentTemplate(EnumEquipment.Wrist,"护腕"),
+      new EquipmentTemplate(EnumEquipment.OneHand, "匕首"),
+      new EquipmentTemplate(EnumEquipment.TwoHands, "大斧头")
     };
 
     public static void AddSingleTemplate()
