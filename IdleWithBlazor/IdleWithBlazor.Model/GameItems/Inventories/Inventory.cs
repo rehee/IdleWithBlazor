@@ -55,6 +55,10 @@ namespace IdleWithBlazor.Model.GameItems.Inventories
       {
         return Task.FromResult(false);
       }
+      if (inventoryMapper.Count > 10)
+      {
+        return Task.FromResult(false);
+      }
       return Task.FromResult(inventoryMapper?.TryAdd(item.Id, item) ?? false);
     }
   }

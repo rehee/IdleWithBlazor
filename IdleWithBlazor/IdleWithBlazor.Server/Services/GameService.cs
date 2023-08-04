@@ -47,6 +47,7 @@ namespace IdleWithBlazor.Server.Services
     {
       var character = ActorHelper.New<ICharacter>(userId, $"查内姆 {userId.ToString().Split("-")[0]}");
       character.Init();
+      
       if (Characters.TryAdd(userId, character))
       {
         return Task.FromResult(character);

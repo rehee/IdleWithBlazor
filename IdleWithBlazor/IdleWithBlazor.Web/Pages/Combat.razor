@@ -28,7 +28,7 @@
         foreach (var p in Room?.Value?.GameMap?.Players)
         {
           <div class="col-span-3">
-            @p.Name @p.Level @p.CurrentExp
+            @p.Name [hp:@p.CurrentHp][level:@p.Level][exp:@p.CurrentExp]
           </div>
 
 

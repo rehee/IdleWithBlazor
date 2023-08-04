@@ -35,9 +35,8 @@ namespace IdleWithBlazor.Server.Tasks
           await service.NewRoomAsync(user);
         }
         await service.OnTick(sp);
-        var games = service.Games();
-        await hubService.Broadcast(games);
-        games = null;
+        await hubService.Broadcast(service.GetCharacters());
+        
         count++;
         if (count >= (1000 / ConstSetting.TickTime) * 60)
         {

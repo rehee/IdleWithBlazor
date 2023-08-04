@@ -14,7 +14,7 @@ namespace IdleWithBlazor.Model.Actors
     public int MaxAttack { get; set; }
     public virtual IActor Target { get; protected set; }
     public IEnumerable<IActionSlot>? ActionSlots => slots?.Values;
-    private ConcurrentDictionary<int, IActionSlot>? slots { get; set; }
+    protected ConcurrentDictionary<int, IActionSlot>? slots { get; set; }
     protected void SetActionSlots(ConcurrentDictionary<int, IActionSlot>? actionSlots)
     {
       slots = actionSlots;
@@ -30,11 +30,6 @@ namespace IdleWithBlazor.Model.Actors
     }
     public virtual IEnumerable<IActor> ActionSkills { get; set; }
 
-
-    IActionSkill[]? ISprite.ActionSkills => throw new NotImplementedException();
-
-
-
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
       if (ActionSlots == null)
@@ -43,19 +38,6 @@ namespace IdleWithBlazor.Model.Actors
       }
 
       return (await Task.WhenAll(ActionSlots.Where(b => b != null).Select(b => b?.OnTick(sp)))).All(b => b == true);
-      //return await base.OnTick(sp);
-
-    }
-    //(
-    //(
-    ////new Task<bool>[] { base.OnTick() })
-    ////.Concat(ActionSkills.Select(b => b.OnTick()))
-    ////.ToArray()
-    ////ActionSkills.Select(b => b.OnTick(sp)).ToArray()
-    //)))
-    public void SetActions(IActionSkill[]? skills)
-    {
-      throw new NotImplementedException();
     }
   }
 }

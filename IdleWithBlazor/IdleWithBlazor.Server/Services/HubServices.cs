@@ -41,39 +41,28 @@ namespace IdleWithBlazor.Server.Services
       ConnectionIdUserPageMap.AddOrUpdate(connectionId, page, (k, v) => page);
       return Task.CompletedTask;
     }
-    public async Task Broadcast(IEnumerable<IGameRoom> games)
+    public async Task Broadcast(IEnumerable<ICharacter> characters)
     {
-      var users = ConnectionIdUserMap
-        .Select(b =>
-        (
-          connectionId: b.Key,
-          userId: b.Value,
-          game: games.FirstOrDefault(g => g.OwnerId.Equals(b.Value)))
-        ).ToArray();
+      var connectionIdAndUser = ConnectionIdUserMap.Select(b => (connectionId: b.Key, userId: b.Value));
       var connectionGroup = ConnectionIdUserPageMap.Select(b => (id: b.Key, type: b.Value));
-      var query =
-        from c in connectionGroup
-        join u in users on c.id equals u.connectionId into ug
-        from user in ug.DefaultIfEmpty()
-        select
-        new
-        {
-          UserId = user.userId,
-          ConnectionId = user.connectionId,
-          Geme = user.game,
-          Page = c.type,
-          Client = hubContext.Clients.Client(user.connectionId)
-        };
-
-      await Task.WhenAll(query.Select(q =>
+      var broadCastQuery =
+        (from character in characters
+         join user in connectionIdAndUser on character.Id equals user.userId
+         join userPage in connectionGroup on user.connectionId equals userPage.id
+         select (c: character, connection: user.connectionId, Client: hubContext.Clients.Client(user.connectionId), user: user.userId, Page: userPage.type));
+      await Task.WhenAll(broadCastQuery.Select(q =>
       {
         switch (q.Page)
         {
           case EnumUserPage.Combat:
+            if (q.c.Room == null)
+            {
+              return Task.CompletedTask;
+            }
             string combatJson = null;
             try
             {
-              var dto = q.Geme.ToDTO<GameRoomDTO>();
+              var dto = q.c.Room.ToDTO<GameRoomDTO>();
               combatJson = JsonSerializer.Serialize(dto, ConstSetting.Options);
               dto = null;
             }
@@ -83,10 +72,11 @@ namespace IdleWithBlazor.Server.Services
             }
             return q.Client.SendAsync("CombatMessage", combatJson);
           case EnumUserPage.Backpack:
+
             string inventoryJson = null;
             try
             {
-              var dto = q.Geme.GameOwner.ToDTO<InventoryDTO>();
+              var dto = q.c.ToDTO<InventoryDTO>();
               inventoryJson = JsonHelper.ToJson(dto);
               dto = null;
             }
@@ -99,7 +89,7 @@ namespace IdleWithBlazor.Server.Services
             string skilJson = null;
             try
             {
-              var dto = q.Geme.GameOwner.ToDTO<SkillBookDTO>();
+              var dto = q.c.ToDTO<SkillBookDTO>();
               skilJson = JsonHelper.ToJson(dto);
               dto = null;
             }
@@ -112,7 +102,9 @@ namespace IdleWithBlazor.Server.Services
             return Task.CompletedTask;
         }
       }));
-      query = null;
+      connectionIdAndUser = null;
+      connectionGroup = null;
+      broadCastQuery = null;
       await Task.CompletedTask;
     }
 

@@ -14,13 +14,6 @@ namespace IdleWithBlazor.Model.Actors
     public int NextLevelExp { get; set; }
     public bool EnableLevelUp { get; set; }
 
-    IActionSkill[]? ISprite.ActionSkills => throw new NotImplementedException();
-
-    
-    public void SetActions(IActionSkill[]? skills)
-    {
-      throw new NotImplementedException();
-    }
 
     public void SetPlayerFromCharacter(ICharacter character)
     {
@@ -31,6 +24,8 @@ namespace IdleWithBlazor.Model.Actors
       this.NextLevelExp = character.NextLevelExp;
       this.MinAttack = character.BaseAttack;
       this.MaxAttack = character.BaseAttack;
+      this.MaxHp = 100 + 100 * (character.Level - 1);
+      this.CurrentHp = MaxHp;
       SetActionSlots(character.ActionSlots);
     }
 

@@ -131,7 +131,8 @@ namespace IdleWithBlazor.Model.Characters
 
     public Task<bool> UpdatePlayerAsync()
     {
-      ThisPlayer.MaxHp = ThisPlayer.MaxHp;
+      ThisPlayer.MaxHp = 100 + 100 * (Level - 1);
+      ThisPlayer.CurrentHp = ThisPlayer.MaxHp;
       ThisPlayer.NextLevelExp = NextLevelExp;
       ThisPlayer.CurrentExp = CurrentExp;
       ThisPlayer.Level = Level;

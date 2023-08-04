@@ -17,7 +17,7 @@ namespace IdleWithBlazor.Model.Actors
       }
       if (monsters != null)
       {
-        foreach (var mob in monsters)
+        foreach (var mob in monsters.Where(b => b.CurrentHp > 0))
         {
           yield return mob;
         }
@@ -66,24 +66,29 @@ namespace IdleWithBlazor.Model.Actors
       if (monsters == null)
       {
         monsters = new List<IMonster>();
-        for (var i = 0; i < 5; i++)
+      }
+      else
+      {
+        foreach (var m in monsters)
         {
-          var m = ActorHelper.New<IMonster>();
-          m.Name = "小野怪";
-          m.CurrentHp = 10;
-          m.MaxHp = 10;
-          m.Level = 1;
-          if (m != null)
-          {
-            monsters.Add(m);
-          }
+          m.Dispose();
+        }
+        monsters.Clear();
+      }
+      for (var i = 0; i < 5; i++)
+      {
+        var m = ActorHelper.New<IMonster>();
+        m.Name = "小野怪";
+        m.CurrentHp = 10;
+        m.MaxHp = 10;
+        m.Level = 1;
+        m.Init(null, ActorHelper.ActionSkillPool.FirstOrDefault());
+        if (m != null)
+        {
+          monsters.Add(m);
         }
       }
-      //monsters.Clear();
-      foreach (var m in monsters)
-      {
-        m.CurrentHp = m.MaxHp;
-      }
+
       return Task.FromResult(true);
     }
 
@@ -94,7 +99,7 @@ namespace IdleWithBlazor.Model.Actors
       {
         this.owner = room.GameOwner;
         this.guests = () => room.Guests();
-        MonsterRespawnRate = 50;
+        MonsterRespawnRate = TickHelper.GetColdDownTick(null, 5);
         MonsterRespawn = MonsterRespawnRate;
         FirstRespawn = true;
       }
@@ -106,6 +111,7 @@ namespace IdleWithBlazor.Model.Actors
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
       var monster = Monsters.ToList();
+      var players = Players();
       if (monster.All(b => b.CurrentHp <= 0))
       {
         monster = null;
@@ -114,12 +120,8 @@ namespace IdleWithBlazor.Model.Actors
       }
       var baseResult = await base.OnTick(sp);
 
-      foreach (var player in Players())
+      foreach (var player in players.Where(p => p.ActionSlots?.Any() == true && p.CurrentHp > 0))
       {
-        if (player.ActionSlots == null)
-        {
-          continue;
-        }
         foreach (var action in player.ActionSlots.Where(b => b?.CurrentTick == true))
         {
           var livedMonster = monster.Where(b => b.CurrentHp > 0).ToArray();
@@ -132,7 +134,11 @@ namespace IdleWithBlazor.Model.Actors
             var itemDrop = await TemplateHelper.GetRamdonDrop(this, m);
             if (itemDrop != null)
             {
-              await owner?.PickItemAsync(itemDrop);
+              if (!await owner?.PickItemAsync(itemDrop))
+              {
+                itemDrop.Dispose();
+                itemDrop = null;
+              }
             }
             await owner.GainCurrency(exp);
             await Task.WhenAll(guests().Select(b => b.GainCurrency(exp)));
@@ -142,6 +148,14 @@ namespace IdleWithBlazor.Model.Actors
         }
 
       }
+      foreach (var mob in monster.Where(b => b.ActionSlots?.Any() == true && b.CurrentHp > 0))
+      {
+        foreach (var action in mob.ActionSlots.Where(b => b?.CurrentTick == true))
+        {
+          await action.ActionSkill.Attack(mob, players.Where(b => b.CurrentHp > 0));
+        }
+      }
+      players = null;
       monster = null;
       return baseResult;
     }
