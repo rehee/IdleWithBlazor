@@ -21,6 +21,10 @@ namespace IdleWithBlazor.Web.Components
     public IScopedContext<InventoryDTO> Inventory { get; protected set; }
     [Inject]
     public IScopedContext<SkillBookDTO> SkillBook { get; protected set; }
+    [Inject]
+    public IScopedContext<GameMapDetailDTO> MapDetail { get; protected set; }
+    [Inject]
+    public IScopedContext<GameListDTO> GameList { get; protected set; }
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();

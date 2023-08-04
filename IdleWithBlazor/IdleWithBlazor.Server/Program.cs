@@ -12,6 +12,7 @@ using IdleWithBlazor.Server.Tasks;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using IdleWithBlazor.Server.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 ModelHelper.InitModel();
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,7 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddScoped<IHubServices, HubServices>(sp =>
-  new HubServices(sp.GetService<IHubContext<MyHub>>()));
+  new HubServices(sp.GetService<IHubContext<MyHub>>(), sp.GetService<IGameService>()));
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
 builder.Services.AddSingleton<IItemService, ItemService>();
 builder.Services.AddSingleton<IGameService, GameService>();

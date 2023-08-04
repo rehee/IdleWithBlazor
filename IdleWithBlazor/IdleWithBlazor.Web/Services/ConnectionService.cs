@@ -17,19 +17,25 @@ namespace IdleWithBlazor.Web.Services
     private readonly IScopedContext<GameRoomDTO> room;
     private readonly IScopedContext<InventoryDTO> inventory;
     private readonly IScopedContext<SkillBookDTO> skillbook;
+    private readonly IScopedContext<GameMapDetailDTO> mapDetail;
+    private readonly IScopedContext<GameListDTO> gameList;
     private readonly Setting setting;
 
     private HubConnection? hub { get; set; } = null;
     public ConnectionService(IStorageService storage, Setting setting,
       IScopedContext<GameRoomDTO> room,
       IScopedContext<InventoryDTO> inventory,
-      IScopedContext<SkillBookDTO> skillbook
+      IScopedContext<SkillBookDTO> skillbook,
+      IScopedContext<GameMapDetailDTO> mapDetail,
+      IScopedContext<GameListDTO> gameList
       )
     {
       this.storage = storage;
       this.room = room;
       this.inventory = inventory;
       this.skillbook = skillbook;
+      this.mapDetail = mapDetail;
+      this.gameList = gameList;
       this.setting = setting;
     }
     public async Task<bool> AbortAsync()
@@ -84,6 +90,15 @@ namespace IdleWithBlazor.Web.Services
         {
           skillbook.SetValue(JsonHelper.ToObject<SkillBookDTO>(r));
         });
+        hub.On<string>("MapMessage", r =>
+        {
+          mapDetail.SetValue(JsonHelper.ToObject<GameMapDetailDTO>(r));
+        });
+        hub.On<string>("MiscellMessage", r =>
+        {
+          gameList.SetValue(JsonHelper.ToObject<GameListDTO>(r));
+        });
+
         await hub.StartAsync();
         return true;
       }
@@ -126,6 +141,18 @@ namespace IdleWithBlazor.Web.Services
     public async Task SelectSkill(Guid skillId, int slot)
     {
       await hub.SendAsync("SelectSkill", skillId, slot);
+    }
+    public async Task QuitGame()
+    {
+      await hub.SendAsync("QuitGame");
+    }
+    public async Task CreateNewGame()
+    {
+      await hub.SendAsync("CreateNewGame");
+    }
+    public async Task JoinGame(Guid id)
+    {
+      await hub.SendAsync("JoinGame", id);
     }
   }
 }

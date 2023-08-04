@@ -13,7 +13,7 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
     Task<bool> KickGuestAsync(Guid guestId);
     Task<bool> CreateMapAsync();
     Task<bool> CloseGameAsync();
-
+    bool IsClosed { get; }
     Guid? OwnerId { get; }
     ICharacter? GameOwner { get; }
     IEnumerable<ICharacter> Guests();

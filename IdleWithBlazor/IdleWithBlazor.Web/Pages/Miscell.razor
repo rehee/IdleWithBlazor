@@ -1,3 +1,47 @@
 ﻿@inherits MiscellPage
 @page "/Miscell"
 <PageTitle>杂项</PageTitle>
+
+<div>
+  <div>
+    当前游戏
+  </div>
+  @if (GameList?.Value?.CurrentGame != null)
+  {
+    <div>
+      <p>房主名: @GameList?.Value?.CurrentGame?.OwnerName</p>
+      <p>玩家数量: @GameList?.Value?.CurrentGame?.PlayerNumber</p>
+    </div>
+    <div>
+      <input type="button" @onclick="QuitGame" value="离开游戏" />
+    </div>
+  }
+  else
+  {
+    <div>
+      <input type="button" @onclick="CreateNewGame" value="新开游戏" />
+    </div>
+  }
+</div>
+<div>
+  <div>
+    全部游戏
+  </div>
+  @if (GameList?.Value?.Games?.Any() == true)
+  {
+    foreach (var g in GameList?.Value?.Games)
+    {
+      <div>
+        <p>房主名: @g.OwnerName</p>
+        <p>玩家数量: @g.PlayerNumber</p>
+        @if (GameList?.Value?.CurrentGame == null)
+        {
+          <p>
+            <input type="button" @onclick="()=>JoinGame(g.Id)" value="加入游戏" />
+          </p>
+
+        }
+      </div>
+    }
+  }
+</div>

@@ -157,6 +157,17 @@ namespace IdleWithBlazor.Common.Helpers
         }
       });
 
+      AddDTOMapper<IGameMap, GameMapDetailDTO>((input, dto) =>
+      {
+        dto.MapLevel = input.MapLevel;
+        dto.PackSize = input.PackSize;
+      });
+
+      AddDTOMapper<IGameRoom, GameListItemDTO>((input, dto) =>
+      {
+        dto.OwnerName = input.GameOwner.Name;
+        dto.PlayerNumber = input.Guests().Count() + 1;
+      });
     }
 
 

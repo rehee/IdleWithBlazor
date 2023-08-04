@@ -1,4 +1,5 @@
-﻿using IdleWithBlazor.Web.Components;
+﻿using IdleWithBlazor.Common.Enums;
+using IdleWithBlazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -12,6 +13,7 @@ namespace IdleWithBlazor.Web.Pages
       if (firstRender)
       {
         SkillBook.ValueChange += SkillBook_ValueChange;
+        await connection.SetPage(EnumUserPage.Character);
       }
     }
     public async Task SelectSkill(Guid skillId, int slot)

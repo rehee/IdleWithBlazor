@@ -40,7 +40,8 @@ namespace IdleWithBlazor.Model.Actors
 
     }
     public IEnumerable<IMonster?> Monsters => monsters ?? Enumerable.Empty<IMonster?>();
-
+    public int MapLevel { get; set; }
+    public int PackSize { get; set; }
     private List<IMonster> monsters { get; set; }
 
     private ICharacter? owner { get; set; }
@@ -54,12 +55,16 @@ namespace IdleWithBlazor.Model.Actors
       return true;
     }
 
-    public Task<bool> GenerateMobsAsync()
+    public async Task<bool> GenerateMobsAsync()
     {
       if (!FirstRespawn && MonsterRespawn > 0)
       {
         MonsterRespawn--;
-        return Task.FromResult(false);
+        return false;
+      }
+      if (!FirstRespawn)
+      {
+        MapLevel++;
       }
       FirstRespawn = false;
       MonsterRespawn = MonsterRespawnRate;
@@ -75,21 +80,26 @@ namespace IdleWithBlazor.Model.Actors
         }
         monsters.Clear();
       }
-      for (var i = 0; i < 5; i++)
+      for (var i = 0; i < PackSize; i++)
       {
         var m = ActorHelper.New<IMonster>();
         m.Name = "小野怪";
-        m.CurrentHp = 10;
-        m.MaxHp = 10;
-        m.Level = 1;
+        m.MaxHp = 10 + 10 * (MapLevel - 1);
+        m.MinAttack = 1 + 10 * (MapLevel - 1);
+        m.CurrentHp = m.MaxHp;
+        m.Level = MapLevel;
         m.Init(null, ActorHelper.ActionSkillPool.FirstOrDefault());
         if (m != null)
         {
           monsters.Add(m);
         }
       }
-
-      return Task.FromResult(true);
+      await owner.GainCurrency(0);
+      foreach (var g in guests())
+      {
+        await g.GainCurrency(0);
+      }
+      return true;
     }
 
     public override void Init(IActor? parent, params object[] setInfo)
@@ -99,6 +109,8 @@ namespace IdleWithBlazor.Model.Actors
       {
         this.owner = room.GameOwner;
         this.guests = () => room.Guests();
+        MapLevel = 1;
+        PackSize = 5;
         MonsterRespawnRate = TickHelper.GetColdDownTick(null, 5);
         MonsterRespawn = MonsterRespawnRate;
         FirstRespawn = true;
@@ -110,14 +122,24 @@ namespace IdleWithBlazor.Model.Actors
     public int MonsterRespawn { get; set; }
     public override async Task<bool> OnTick(IServiceProvider sp)
     {
+      if (owner.ThisPlayer.CurrentHp <= 0)
+      {
+        MapLevel = MapLevel - 2;
+        if (MapLevel <= 0)
+        {
+          MapLevel = 1;
+        }
+        return await GenerateMobsAsync();
+      }
       var monster = Monsters.ToList();
       var players = Players();
+
       if (monster.All(b => b.CurrentHp <= 0))
       {
         monster = null;
         return await GenerateMobsAsync();
-
       }
+
       var baseResult = await base.OnTick(sp);
 
       foreach (var player in players.Where(p => p.ActionSlots?.Any() == true && p.CurrentHp > 0))

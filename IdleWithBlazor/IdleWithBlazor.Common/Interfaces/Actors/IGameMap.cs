@@ -11,11 +11,13 @@ namespace IdleWithBlazor.Common.Interfaces.Actors
 {
   public interface IGameMap : IActor
   {
-    
+
     Task<bool> GenerateMobsAsync();
     Task<bool> CloseMapAsync();
 
     IEnumerable<IPlayer?> Players();
     IEnumerable<IMonster?> Monsters { get; }
+    int MapLevel { get; }
+    int PackSize { get; }
   }
 }

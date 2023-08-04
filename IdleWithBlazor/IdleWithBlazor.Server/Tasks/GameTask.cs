@@ -10,14 +10,14 @@ namespace IdleWithBlazor.Server.Tasks
   {
     private readonly IGameService service;
     private readonly IServiceProvider sp;
-    
+
 
     IHubServices? hubService { get; set; }
     public GameTask(IGameService service, IServiceProvider sp)
     {
       this.service = service;
       this.sp = sp;
-      
+
     }
     int count = 0;
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,9 +34,11 @@ namespace IdleWithBlazor.Server.Tasks
           await service.CreateCharacterAsync(user);
           await service.NewRoomAsync(user);
         }
-        await service.OnTick(sp);
-        await hubService.Broadcast(service.GetCharacters());
         
+
+        await service.OnTick(sp);
+        await hubService.Broadcast(service.GetCharacters(), service.Games().Where(b => b.IsClosed != true));
+
         count++;
         if (count >= (1000 / ConstSetting.TickTime) * 60)
         {

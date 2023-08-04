@@ -24,7 +24,8 @@ builder.Services.AddSingleton<IConnection, ConnectionService>();
 builder.Services.AddSingleton<IScopedContext<GameRoomDTO>, ScopedContext<GameRoomDTO>>();
 builder.Services.AddSingleton<IScopedContext<InventoryDTO>, ScopedContext<InventoryDTO>>();
 builder.Services.AddSingleton<IScopedContext<SkillBookDTO>, ScopedContext<SkillBookDTO>>();
-
+builder.Services.AddSingleton<IScopedContext<GameMapDetailDTO>, ScopedContext<GameMapDetailDTO>>();
+builder.Services.AddSingleton<IScopedContext<GameListDTO>, ScopedContext<GameListDTO>>();
 builder.Services.AddScoped<IScoped, Scoped>();
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

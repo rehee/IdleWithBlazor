@@ -32,7 +32,7 @@ namespace IdleWithBlazor.Model.Actors
     }
 
     public IGameMap? Map { get; set; }
-
+    public bool IsClosed { get; set; }
     public async Task<bool> CloseGameAsync()
     {
       try
@@ -46,7 +46,9 @@ namespace IdleWithBlazor.Model.Actors
           await Task.WhenAll(guests.Keys.Select(b => KickGuestAsync(b)));
         }
         GameOwner = null;
+        guests = null;
         await DisposeAsync();
+        IsClosed = true;
         return true;
       }
       catch

@@ -57,7 +57,20 @@ namespace IdleWithBlazor.Server.Hubs
     }
     public async Task SelectSkill(Guid skillId, int slot)
     {
-      await service.SelectSkill(Context.ConnectionId, skillId,  slot);
+      await service.SelectSkill(Context.ConnectionId, skillId, slot);
+    }
+    public async Task QuitGame()
+    {
+      await service.QuitGame(Context.ConnectionId);
+    }
+    public async Task CreateNewGame()
+    {
+      await service.CreateNewGame(Context.ConnectionId);
+    }
+    public async Task JoinGame(Guid id)
+    {
+      await service.JoinGame(Context.ConnectionId, id);
     }
   }
 }
+

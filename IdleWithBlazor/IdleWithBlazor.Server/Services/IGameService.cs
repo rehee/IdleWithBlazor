@@ -12,6 +12,9 @@ namespace IdleWithBlazor.Server.Services
     IEnumerable<ICharacter> GetCharacters();
     IEnumerable<Guid> GetUserWithCharacters();
     IEnumerable<IGameRoom> Games();
+    Task JoinGame(Guid userId, Guid id);
     Task OnTick(IServiceProvider sp);
+
+    Task QuitGame(Guid userId);
   }
 }

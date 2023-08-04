@@ -18,11 +18,13 @@ namespace IdleWithBlazor.Server.Services
   public class HubServices : IHubServices
   {
     private readonly IHubContext<Hub> hubContext;
+    private readonly IGameService gameService;
     static ConcurrentDictionary<string, Guid> ConnectionIdUserMap = new ConcurrentDictionary<string, Guid>();
     static ConcurrentDictionary<string, EnumUserPage> ConnectionIdUserPageMap = new ConcurrentDictionary<string, EnumUserPage>();
-    public HubServices(IHubContext<Hub> hubContext)
+    public HubServices(IHubContext<Hub> hubContext, IGameService gameService)
     {
       this.hubContext = hubContext;
+      this.gameService = gameService;
     }
     public Task UserConnected(Guid userId, string connectionId)
     {
@@ -41,8 +43,9 @@ namespace IdleWithBlazor.Server.Services
       ConnectionIdUserPageMap.AddOrUpdate(connectionId, page, (k, v) => page);
       return Task.CompletedTask;
     }
-    public async Task Broadcast(IEnumerable<ICharacter> characters)
+    public async Task Broadcast(IEnumerable<ICharacter> characters, IEnumerable<IGameRoom> games)
     {
+      IGameRoom[] gameslist = null;
       var connectionIdAndUser = ConnectionIdUserMap.Select(b => (connectionId: b.Key, userId: b.Value));
       var connectionGroup = ConnectionIdUserPageMap.Select(b => (id: b.Key, type: b.Value));
       var broadCastQuery =
@@ -98,6 +101,35 @@ namespace IdleWithBlazor.Server.Services
               Console.WriteLine(ex);
             }
             return q.Client.SendAsync("CharacterMessage", skilJson);
+          case EnumUserPage.Map:
+            if (q.c.Room?.Map == null)
+            {
+              return Task.CompletedTask;
+            }
+            string mapJson = null;
+            try
+            {
+              mapJson = JsonHelper.ToJson(q.c.Room.Map.ToDTO<GameMapDetailDTO>());
+            }
+            catch (Exception mapJsonex)
+            {
+
+            }
+            return q.Client.SendAsync("MapMessage", mapJson);
+          case EnumUserPage.Miscell:
+            var gameListDto = new GameListDTO();
+            Guid currentGameId = Guid.Empty;
+            if (q.c.Room != null)
+            {
+              currentGameId = q.c.Room.Id;
+              gameListDto.CurrentGame = q.c.Room.ToDTO<GameListItemDTO>();
+            }
+            if (gameslist == null)
+            {
+              gameslist = games.ToArray();
+            }
+            gameListDto.Games = gameslist.Where(b => b.Id != currentGameId).Select(b => b.ToDTO<GameListItemDTO>()).ToArray();
+            return q.Client.SendAsync("MiscellMessage", JsonHelper.ToJson(gameListDto));
           default:
             return Task.CompletedTask;
         }
@@ -238,6 +270,28 @@ namespace IdleWithBlazor.Server.Services
       if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId) && GameService.Characters.TryGetValue(userId, out var character))
       {
         await character.PickSkill(skillId, slot);
+      }
+    }
+
+    public async Task QuitGame(string connectionId)
+    {
+      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      {
+        await gameService.QuitGame(userId);
+      }
+    }
+    public async Task CreateNewGame(string connectionId)
+    {
+      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      {
+        await gameService.NewRoomAsync(userId);
+      }
+    }
+    public async Task JoinGame(string connectionId, Guid id)
+    {
+      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      {
+        await gameService.JoinGame(userId, id);
       }
     }
     #endregion

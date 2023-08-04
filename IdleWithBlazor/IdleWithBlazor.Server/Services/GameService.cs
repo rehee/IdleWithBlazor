@@ -47,7 +47,7 @@ namespace IdleWithBlazor.Server.Services
     {
       var character = ActorHelper.New<ICharacter>(userId, $"查内姆 {userId.ToString().Split("-")[0]}");
       character.Init();
-      
+
       if (Characters.TryAdd(userId, character))
       {
         return Task.FromResult(character);
@@ -74,9 +74,38 @@ namespace IdleWithBlazor.Server.Services
 
     }
 
+
+    public async Task QuitGame(Guid userId)
+    {
+      var character = await GetCharacterAsync(userId);
+      if (character == null || character.Room == null)
+      {
+        return;
+      }
+      await character.LeaveGameAsync();
+
+    }
+    public async Task JoinGame(Guid userId, Guid id)
+    {
+      var character = await GetCharacterAsync(userId);
+      if (character == null || character.Room != null)
+      {
+        return;
+      }
+      var gameRoom = GameRooms.Values.Where(b => b.IsClosed != true && b.Id == id).FirstOrDefault();
+      if (gameRoom != null)
+      {
+        {
+          await character.JoinGameAsync(gameRoom);
+        }
+
+      }
+    }
+
+
     public async Task OnTick(IServiceProvider sp)
     {
-      await Task.WhenAll(Games().Select(b => b.OnTick(sp)));
+      await Task.WhenAll(Games().Where(b => !b.IsClosed).Select(b => b.OnTick(sp)));
     }
   }
 }
