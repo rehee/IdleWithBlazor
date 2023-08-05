@@ -7,7 +7,7 @@ namespace IdleWithBlazor.Web.Pages
     public async Task LogoutAsync()
     {
       await auth?.LogOffAsync();
-      nav.NavigateTo("Login", true);
+      nav.NavigateTo("", true);
     }
   }
 
