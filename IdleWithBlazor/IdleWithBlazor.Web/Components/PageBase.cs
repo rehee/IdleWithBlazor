@@ -2,6 +2,7 @@
 using IdleWithBlazor.Common.DTOs.GameActions.Skills;
 using IdleWithBlazor.Common.DTOs.Inventories;
 using IdleWithBlazor.Common.Services;
+using IdleWithBlazor.Web.Models;
 using IdleWithBlazor.Web.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -25,13 +26,15 @@ namespace IdleWithBlazor.Web.Components
     public IScopedContext<GameMapDetailDTO> MapDetail { get; protected set; }
     [Inject]
     public IScopedContext<GameListDTO> GameList { get; protected set; }
+    [Inject]
+    public Setting WebSetting { get; set; }
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();
       var isAuth = await auth?.IsAuthenticatedAsync();
       if (isAuth != true)
       {
-        nav.NavigateTo("/Login");
+        nav.NavigateTo($"{WebSetting.ReBaseUrl}Login");
         return;
       }
       await connection.ConnectionAsync();

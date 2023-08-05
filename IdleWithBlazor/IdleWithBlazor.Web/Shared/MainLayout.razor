@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using IdleWithBlazor.Web.Models;
+@inherits LayoutComponentBase
+@inject Setting setting
 <div class="container mx-auto min-h-screen flex flex-col">
   <div class="h-20 bg-gray-200 grid grid-cols-5 gap-5">
 
@@ -30,7 +32,7 @@
     <NavLink class="w-full text-center" href="" Match="NavLinkMatch.All">
       角色
     </NavLink>
-    <NavLink class="w-full text-center" href="/Backpack" Match="NavLinkMatch.All">
+    <NavLink class="w-full text-center" href="@setting.Url("Backpack")" )" Match="NavLinkMatch.All">
       背包
     </NavLink>
 
