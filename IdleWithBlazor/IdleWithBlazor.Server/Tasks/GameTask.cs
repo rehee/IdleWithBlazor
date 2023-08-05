@@ -29,13 +29,7 @@ namespace IdleWithBlazor.Server.Tasks
           using var scope = sp.CreateScope();
           hubService = scope.ServiceProvider.GetService<IHubServices>();
         }
-        foreach (var user in (await hubService.ConnectedUsers()).Except(service.GetUserWithCharacters()))
-        {
-          await service.CreateCharacterAsync(user);
-          await service.NewRoomAsync(user);
-        }
         
-
         await service.OnTick(sp);
         await hubService.Broadcast(service.GetCharacters(), service.Games().Where(b => b.IsClosed != true));
 

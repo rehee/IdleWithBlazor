@@ -51,6 +51,15 @@ namespace IdleWithBlazor.Model.Actors
     {
       this.owner = null;
       this.guests = null;
+      if (monsters?.Any() == true)
+      {
+        foreach (var m in monsters)
+        {
+          m.Dispose();
+        }
+        monsters.Clear();
+      }
+      monsters = null;
       await DisposeAsync();
       return true;
     }

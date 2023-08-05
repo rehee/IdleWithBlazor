@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using IdleWithBlazor.Server.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using IdleWithBlazor.Common.Interfaces.Repostories;
+using IdleWithBlazor.Server.Repostories.InMemory;
 
 ModelHelper.InitModel();
 var builder = WebApplication.CreateBuilder(args);
@@ -26,9 +28,9 @@ builder.Services.AddCors(options =>
   });
 });
 
-
-builder.Services.AddScoped<IHubServices, HubServices>(sp =>
-  new HubServices(sp.GetService<IHubContext<MyHub>>(), sp.GetService<IGameService>()));
+builder.Services.AddSingleton<IGameRepostory, MemoryGameRepostory>();
+builder.Services.AddSingleton<IHubConnectionRepostory, MemoryHubConnectionRepostory>();
+builder.Services.AddScoped<IHubServices, HubServices>();
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
 builder.Services.AddSingleton<IItemService, ItemService>();
 builder.Services.AddSingleton<IGameService, GameService>();

@@ -1,4 +1,5 @@
-﻿using IdleWithBlazor.Common.Interfaces.Actors;
+﻿using IdleWithBlazor.Common.Enums;
+using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Model.Actors;
 
 namespace IdleWithBlazor.Server.Services
@@ -13,8 +14,12 @@ namespace IdleWithBlazor.Server.Services
     IEnumerable<Guid> GetUserWithCharacters();
     IEnumerable<IGameRoom> Games();
     Task JoinGame(Guid userId, Guid id);
+    Task QuitGame(Guid userId);
+
+    Task<bool> EquipOrUnequip(Guid userId, Guid? itemId, int? offset, EnumEquipmentSlot? slot);
+    Task SelectSkill(Guid userId, Guid skillId, int slot);
+
     Task OnTick(IServiceProvider sp);
 
-    Task QuitGame(Guid userId);
   }
 }

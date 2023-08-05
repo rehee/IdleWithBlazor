@@ -6,6 +6,7 @@ using IdleWithBlazor.Common.Enums;
 using IdleWithBlazor.Common.Helpers;
 using IdleWithBlazor.Common.Interfaces.Actors;
 using IdleWithBlazor.Common.Interfaces.Items;
+using IdleWithBlazor.Common.Interfaces.Repostories;
 using IdleWithBlazor.Model.Actors;
 using IdleWithBlazor.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -17,42 +18,36 @@ namespace IdleWithBlazor.Server.Services
 {
   public class HubServices : IHubServices
   {
-    private readonly IHubContext<Hub> hubContext;
+    private readonly IHubConnectionRepostory repostory;
+    private readonly IHubContext<MyHub> hubContext;
     private readonly IGameService gameService;
-    static ConcurrentDictionary<string, Guid> ConnectionIdUserMap = new ConcurrentDictionary<string, Guid>();
-    static ConcurrentDictionary<string, EnumUserPage> ConnectionIdUserPageMap = new ConcurrentDictionary<string, EnumUserPage>();
-    public HubServices(IHubContext<Hub> hubContext, IGameService gameService)
+    public HubServices(IHubConnectionRepostory repostory, IHubContext<MyHub> hubContext, IGameService gameService)
     {
+      this.repostory = repostory;
       this.hubContext = hubContext;
       this.gameService = gameService;
     }
-    public Task UserConnected(Guid userId, string connectionId)
+    public async Task UserConnected(Guid userId, string connectionId)
     {
-      ConnectionIdUserMap.TryAdd(connectionId, userId);
-      ConnectionIdUserPageMap.TryAdd(connectionId, EnumUserPage.Character);
-      return Task.CompletedTask;
+      _ = await repostory.AddConnectionIdAsync(connectionId, userId, EnumUserPage.Character);
+      return;
     }
-    public Task UserLeave(string connectionId)
+    public async Task UserLeave(string connectionId)
     {
-      ConnectionIdUserMap.TryRemove(connectionId, out var id);
-      ConnectionIdUserPageMap.TryRemove(connectionId, out var page);
-      return Task.CompletedTask;
+      _ = await repostory.RemoveConnectionIdAsync(connectionId);
     }
-    public Task SetUserPage(string connectionId, EnumUserPage page)
+    public async Task SetUserPage(string connectionId, EnumUserPage page)
     {
-      ConnectionIdUserPageMap.AddOrUpdate(connectionId, page, (k, v) => page);
-      return Task.CompletedTask;
+      _ = await repostory.UpdateConnectionPagesAsync(connectionId, page);
     }
     public async Task Broadcast(IEnumerable<ICharacter> characters, IEnumerable<IGameRoom> games)
     {
-      IGameRoom[] gameslist = null;
-      var connectionIdAndUser = ConnectionIdUserMap.Select(b => (connectionId: b.Key, userId: b.Value));
-      var connectionGroup = ConnectionIdUserPageMap.Select(b => (id: b.Key, type: b.Value));
+      IGameRoom[]? gameslist = null;
+      var userLists = repostory.ConnectionUsers.ToArray();
       var broadCastQuery =
-        (from character in characters
-         join user in connectionIdAndUser on character.Id equals user.userId
-         join userPage in connectionGroup on user.connectionId equals userPage.id
-         select (c: character, connection: user.connectionId, Client: hubContext.Clients.Client(user.connectionId), user: user.userId, Page: userPage.type));
+        from character in characters
+        join user in repostory.ConnectionUsers on character.Id equals user.userId
+        select (c: character, connection: user.connectionId, Client: hubContext.Clients.Client(user.connectionId), user: user.userId, Page: user.page);
       await Task.WhenAll(broadCastQuery.Select(q =>
       {
         switch (q.Page)
@@ -135,8 +130,6 @@ namespace IdleWithBlazor.Server.Services
             return Task.CompletedTask;
         }
       }));
-      connectionIdAndUser = null;
-      connectionGroup = null;
       broadCastQuery = null;
       await Task.CompletedTask;
     }
@@ -146,15 +139,13 @@ namespace IdleWithBlazor.Server.Services
 
     public Task<IEnumerable<Guid>> ConnectedUsers()
     {
-      var result = ConnectionIdUserMap.Values.Select(b => b) ?? Enumerable.Empty<Guid>();
-      return Task.FromResult(result);
+      return Task.FromResult(repostory.Connectedusers as IEnumerable<Guid>);
     }
 
     public void Dispose()
     {
       if (IsDispose) return;
       IsDispose = true;
-      GC.SuppressFinalize(this);
     }
 
     public ValueTask DisposeAsync()
@@ -166,134 +157,53 @@ namespace IdleWithBlazor.Server.Services
     #region equip or un-equip need refactory
     public async Task<bool> EquipOrUnequip(string connectionId, Guid? id, int? offset, EnumEquipmentSlot? slot)
     {
-      var userIdFound = ConnectionIdUserMap.TryGetValue(connectionId, out var userId);
-      if (!userIdFound || userId == null)
+      var userId = await repostory.FindConnectedUser(connectionId);
+      if (userId == null)
       {
         return false;
       }
-      var users = GameService.GameRooms.Values.Where(b => b.OwnerId == userId).Select(b => b.GameOwner).FirstOrDefault();
-      if (users == null)
-      {
-        return false;
-      }
-      if (slot.HasValue)
-      {
-        var unEquiped = users.Equiptor.UnEquip(slot.Value);
-        foreach (var e in unEquiped)
-        {
-          await users.PickItemAsync(e);
-        }
-      }
-      else if (id.HasValue)
-      {
-        var itemPick = await users.TakeOutItemAsync(id.Value);
-        if (itemPick != null && itemPick is IEquipment equipPick)
-        {
-          IEnumerable<IEquipment?> takeoffs = Enumerable.Empty<IEquipment?>();
-          switch (equipPick.EquipmentType)
-          {
-            case EnumEquipment.Head:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Head);
-              break;
-            case EnumEquipment.Neck:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Neck);
-              break;
-            case EnumEquipment.Shoulder:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Shoulder);
-              break;
-            case EnumEquipment.Body:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Body);
-              break;
-            case EnumEquipment.Hand:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Hand);
-              break;
-            case EnumEquipment.Finger:
-              if (offset == 1)
-              {
-                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Rightinger);
-              }
-              else
-              {
-                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.LeftFinger);
-              }
+      return await gameService.EquipOrUnequip(userId.Value, id, offset, slot);
 
-              break;
-            case EnumEquipment.Waist:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Waist);
-              break;
-            case EnumEquipment.Wrist:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Wrist);
-              break;
-            case EnumEquipment.Leg:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Leg);
-              break;
-            case EnumEquipment.Foot:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.Foot);
-              break;
-            case EnumEquipment.MainHand:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.MainHand);
-              break;
-            case EnumEquipment.OffHand:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand);
-              break;
-            case EnumEquipment.OneHand:
-              if (offset == 1)
-              {
-                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand);
-              }
-              else
-              {
-                takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.MainHand);
-              }
-              break;
-            case EnumEquipment.TwoHands:
-              takeoffs = users.Equiptor.UnEquip(EnumEquipmentSlot.OffHand, EnumEquipmentSlot.MainHand);
-              break;
-          }
-          foreach (var item in takeoffs)
-          {
-            await users.PickItemAsync(item);
-          }
-          if (users.Equiptor.Equip(equipPick, offset))
-          {
-            await users.DestoryItemAsync(equipPick.Id);
-          }
-
-          takeoffs = null;
-        }
-      }
-      return true;
     }
 
     public async Task SelectSkill(string connectionId, Guid skillId, int slot)
     {
-
-      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId) && GameService.Characters.TryGetValue(userId, out var character))
+      var userId = await repostory.FindConnectedUser(connectionId);
+      if (userId == null)
       {
-        await character.PickSkill(skillId, slot);
+        return;
       }
+      await gameService.SelectSkill(userId.Value, skillId, slot);
+
     }
 
     public async Task QuitGame(string connectionId)
     {
-      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      var userId = await repostory.FindConnectedUser(connectionId);
+      if (userId == null)
       {
-        await gameService.QuitGame(userId);
+        return;
       }
+      await gameService.QuitGame(userId.Value);
     }
+
     public async Task CreateNewGame(string connectionId)
     {
-      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      var userId = await repostory.FindConnectedUser(connectionId);
+      if (userId == null)
       {
-        await gameService.NewRoomAsync(userId);
+        return;
       }
+      await gameService.NewRoomAsync(userId.Value);
     }
     public async Task JoinGame(string connectionId, Guid id)
     {
-      if (ConnectionIdUserMap.TryGetValue(connectionId, out var userId))
+      var userId = await repostory.FindConnectedUser(connectionId);
+      if (userId == null)
       {
-        await gameService.JoinGame(userId, id);
+        return;
       }
+      await gameService.JoinGame(userId.Value, id);
     }
     #endregion
   }
