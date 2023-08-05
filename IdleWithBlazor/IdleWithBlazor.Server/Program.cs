@@ -33,10 +33,11 @@ builder.Services.AddSingleton<IHubConnectionRepostory, MemoryHubConnectionRepost
 builder.Services.AddScoped<IHubServices, HubServices>();
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
 builder.Services.AddSingleton<IItemService, ItemService>();
-builder.Services.AddSingleton<IGameService, GameService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.ConfigureOptions<TaskConfigration>();
 ServiceInitcs.AddSingleTemplate();
-builder.Services.AddHostedService<GameTask>();
-
+//builder.Services.AddHostedService<GameTask>();
+builder.Services.AddSchedualJob();
 builder.Services.AddControllersWithViews().AddJsonOptions(o =>
 {
   o.JsonSerializerOptions.SetDefaultOption();

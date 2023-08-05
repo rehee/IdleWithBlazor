@@ -24,6 +24,7 @@ namespace IdleWithBlazor.Server.Tasks
     {
       while (!stoppingToken.IsCancellationRequested)
       {
+        //Console.WriteLine(this.GetHashCode().ToString());
         if (hubService == null)
         {
           using var scope = sp.CreateScope();

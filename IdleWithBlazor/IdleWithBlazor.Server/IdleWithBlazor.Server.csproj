@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\IdleWithBlazor.Common\IdleWithBlazor.Common.csproj" />
     <ProjectReference Include="..\IdleWithBlazor.Entity\IdleWithBlazor.Entity.csproj" />
     <ProjectReference Include="..\IdleWithBlazor.Model\IdleWithBlazor.Model.csproj" />
