@@ -11,12 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-#if DEBUG
-builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true);
-#endif
-#if RELEASE
-builder.Configuration.AddJsonFile("appsettings.json");
-#endif
+
 var setting = new Setting
 {
   ServerHost = builder.Configuration["ServerHost"],
