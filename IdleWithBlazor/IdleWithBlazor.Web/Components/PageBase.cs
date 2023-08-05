@@ -34,7 +34,7 @@ namespace IdleWithBlazor.Web.Components
       var isAuth = await auth?.IsAuthenticatedAsync();
       if (isAuth != true)
       {
-        nav.NavigateTo($"{WebSetting.ReBaseUrl}Login");
+        nav.NavigateTo($"Login");
         return;
       }
       await connection.ConnectionAsync();
