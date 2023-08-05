@@ -28,7 +28,7 @@ namespace IdleWithBlazor.Web.Pages
       var result = await auth.LoginAsync(Dto);
       if (result)
       {
-        nav.NavigateTo("/");
+        nav.NavigateTo("");
         return;
       }
     }
