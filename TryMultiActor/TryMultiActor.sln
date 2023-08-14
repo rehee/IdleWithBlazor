@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryMultiActor", "TryMultiActor\TryMultiActor.csproj", "{257C5179-1093-47F4-B02F-CE85B57B5738}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{257C5179-1093-47F4-B02F-CE85B57B5738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{257C5179-1093-47F4-B02F-CE85B57B5738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{257C5179-1093-47F4-B02F-CE85B57B5738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{257C5179-1093-47F4-B02F-CE85B57B5738}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E37A6839-7DB7-45D5-AD14-809450D9BF0C}
+	EndGlobalSection
+EndGlobal

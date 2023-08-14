@@ -9,17 +9,15 @@ namespace IdleWithBlazor.Server.Helpers
   {
     public static IServiceCollection AddSchedualJob(this IServiceCollection services)
     {
-      services.AddQuartz(options =>
-      {
-        options.UseMicrosoftDependencyInjectionJobFactory();
-      });
-
-      services.AddQuartzHostedService();
-      return services;
+      return services.AddQuartz().AddQuartzHostedService();
     }
   }
   public class TaskConfigration : IConfigureOptions<QuartzOptions>
   {
+    public TaskConfigration(IServiceProvider sp)
+    {
+
+    }
     public void Configure(QuartzOptions options)
     {
       var key = JobKey.Create(nameof(GameTask2));
@@ -27,7 +25,7 @@ namespace IdleWithBlazor.Server.Helpers
        .AddTrigger(trigger =>
        {
          trigger.ForJob(key)
-         .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMilliseconds(ConstSetting.TickTime)).RepeatForever());
+           .WithSimpleSchedule(schedule => schedule.WithInterval(TimeSpan.FromMilliseconds(ConstSetting.TickTime)).RepeatForever());
        });
     }
   }
